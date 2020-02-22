@@ -72,14 +72,14 @@ class ScrollableWindow(QtWidgets.QMainWindow):
         np_ref_range_L = 30
 
         # normal or abnormal
-        normality = "\n\tOverall Differential Result is NORMAL. No action needed."
+        normality = "\n\tNormal. No action needed."
         abnormality = []
         if float(np) > np_ref_range_H or float(np) < np_ref_range_L:
             if float(np) > np_ref_range_H:
                 Flag_neu = "H"
             else:
                 Flag_neu = "L"
-            normality = "\n\tOVERALL DIFFERENTIAL RESULT IS ABNORMAL!!! PLEASE RERUN"
+            normality = "\n\tABNORMAL!!! PLEASE RERUN OR SEND FOR FURTHER ANALYSIS"
             abnormality.append("Neutrophil")
 
         if float(lp) > lp_ref_range_H or float(lp) < lp_ref_range_L:
@@ -87,7 +87,7 @@ class ScrollableWindow(QtWidgets.QMainWindow):
                 Flag_lym = "H"
             else:
                 Flag_lym = "L"
-            normality = "\n\tOVERALL DIFFERENTIAL RESULT IS ABNORMAL!!! PLEASE RERUN"
+            normality = "\n\tABNORMAL!!! PLEASE RERUN OR SEND FOR FURTHER ANALYSIS"
             abnormality.append("Lymphocyte")
 
         if float(mp) > mp_ref_range_H or float(mp) < mp_ref_range_L:
@@ -95,7 +95,7 @@ class ScrollableWindow(QtWidgets.QMainWindow):
                 Flag_mon = "H"
             else:
                 Flag_mon = "L"
-            normality = "\n\tOVERALL DIFFERENTIAL RESULT IS ABNORMAL!!! PLEASE RERUN"
+            normality = "\n\tABNORMAL!!! PLEASE RERUN OR SEND FOR FURTHER ANALYSIS"
             abnormality.append("Monocyte")
 
         if float(ep) > ep_ref_range_H or float(ep) < ep_ref_range_L:
@@ -103,7 +103,7 @@ class ScrollableWindow(QtWidgets.QMainWindow):
                 Flag_eos = "H"
             else:
                 Flag_eos = "L"
-            normality = "\n\tOVERALL DIFFERENTIAL RESULT IS ABNORMAL!!! PLEASE RERUN"
+            normality = "\n\tABNORMAL!!! PLEASE RERUN OR SEND FOR FURTHER ANALYSIS"
             abnormality.append("Eosinophil")
 
         # specimen info.... add self later to pas it in
@@ -113,9 +113,9 @@ class ScrollableWindow(QtWidgets.QMainWindow):
         self.specimen_info.setAlignment(QtCore.Qt.AlignTop)
         self.specimen_info.setStyleSheet("QLabel {background-color: #25211f; color: white}")
         self.specimen_info.setText(
-            '\n-----------------------------------------------------------------------------------------------'
-            '\n\t\tSPECIMEN INFORMATION'
-            '\n-----------------------------------------------------------------------------------------------'
+            '\n----------------------------------------------------------------------------------------------------------------------'
+            '\n\t\t\t\t\tSPECIMEN INFORMATION'
+            '\n----------------------------------------------------------------------------------------------------------------------'
             '\n\tSpecimen Accesion Number\t{aa}'
             '\n\tAccession Date/Time\t\t{bb}'
             '\n\tSpecimen Type\t\t\t{cc}'
@@ -132,9 +132,9 @@ class ScrollableWindow(QtWidgets.QMainWindow):
         self.percent = QLabel()
         self.percent.setAlignment(QtCore.Qt.AlignTop)
         self.percent.setStyleSheet("QLabel {background-color: #25211f; color: white}")
-        self.percent.setText('\n-----------------------------------------------------------------------------------------------'
-                            '\n\t\tWBC DIFERRENTIAL RESULTS (PERCENTAGE)'
-                            '\n-----------------------------------------------------------------------------------------------'
+        self.percent.setText('\n----------------------------------------------------------------------------------------------------------------------'
+                            '\n\t\t\t\tWBC DIFERRENTIAL RESULTS (PERCENTAGE)'
+                            '\n----------------------------------------------------------------------------------------------------------------------'
                             '\n\tWBC Percent\t\tReference Range\t\tResult/Flags'
                             '\n\tNeutrophil Count\t\t(30-75%)\t\t{np}%  {fn}'
                             '\n\tLymphocyte Count\t(20-45%)\t\t{lp}%  {fl}'
@@ -148,9 +148,9 @@ class ScrollableWindow(QtWidgets.QMainWindow):
         self.morph.setAlignment(QtCore.Qt.AlignTop)
         self.morph.setStyleSheet("QLabel {background-color: #25211f; color: white}")
         self.morph.setText(
-            '\n-----------------------------------------------------------------------------------------------'
-            '\n\t\tMORPHOLOGY RESULTS'
-            '\n-----------------------------------------------------------------------------------------------'
+            '\n----------------------------------------------------------------------------------------------------------------------'
+            '\n\t\t\t\t\tMORPHOLOGY RESULTS'
+            '\n----------------------------------------------------------------------------------------------------------------------'
             '\n\tPlatelets\t\t\t{n}'
             '\n\tRBC Morphology\t\t{m}'
             '\n\tNRBCs\t\t\t{l}'
@@ -164,9 +164,9 @@ class ScrollableWindow(QtWidgets.QMainWindow):
         self.normality = QLabel()
         self.normality.setAlignment(QtCore.Qt.AlignTop)
         self.normality.setStyleSheet("QLabel {background-color: #25211f; color: white}")
-        self.normality.setText('\n-----------------------------------------------------------------------------------------------'
-                            '\n\t\tDIFFERENTIAL CONCLUSION'
-                            '\n-----------------------------------------------------------------------------------------------'
+        self.normality.setText('\n----------------------------------------------------------------------------------------------------------------------'
+                            '\n\t\t\t\t\tDIFFERENTIAL CONCLUSION'
+                            '\n----------------------------------------------------------------------------------------------------------------------'
                             '{normality}'
                             '\n\tOUT OF RANGE VALUES\t{abnormality}'
                             .format(normality=normality,abnormality=abnormality))

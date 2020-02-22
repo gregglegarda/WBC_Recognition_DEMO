@@ -4,16 +4,18 @@ import os
 
 
 ####### INPUT ########
-accession = input("Enter Accession Number:")
-specimen_type = input("Enter Specimen Type:")
 first_name = input("Enter First Name:")
 last_name = input("Enter Last Name:")
 date_of_birth = input("Enter Date of Birth (MM-DD-YYYY):")
 social_security = input("Enter Social Security Number (XXX-XX-XXXX):")
 print("Running WBC Differential...")
 
-
-#give specimen info
+#give specimen info and unique id
+from datetime import datetime
+from uuid import uuid4
+uniqueid = datetime.now().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
+accession = uniqueid
+specimen_type = "Blood Smear"
 delta = np.timedelta64(5,'h') #EST(eastern) is -5 of UCT(universal)
 todays_datetime = np.datetime64('now') - delta# timestamp right now
 specinfo = [accession, todays_datetime, specimen_type,  first_name, last_name, date_of_birth, social_security]
@@ -41,11 +43,11 @@ diff_results = specimen1.generate_results(specimen_prediction)
 
 
 
-#SAVE THE RECORD ON A DATABASE
+#SAVE THE RECORD (RESULTS AND IMAGES) ON A DATABASE
 header = ["Accession ID","Accession Date/Time","Specimen Type","First Name","Last Name","Date of Birth (MM-DD-YYYY)","Social Security Number","Eosinophils%","Lymphocytes%","Monocytes%","Neutrophils%"]
 row_results = specinfo + diff_results
-filename = "diff_records.csv"
-
+filename = "records/diff_records.csv"
+#save results
 try:
     f = open(filename)
     with open(filename, 'a', newline='') as myfile:  # a means append, it will create a new file if it doesnt exist
@@ -58,7 +60,8 @@ except IOError:
         wr.writerow(header)
         wr.writerow(row_results)
         print("\nPatient File Saved")
-
+#save the images based on unique id (accesson)
+specimen_fig.savefig("records/images/"+str(accession))
 
 
 
