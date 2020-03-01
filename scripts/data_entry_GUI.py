@@ -33,12 +33,12 @@ class data_entry(QDialog):
         mainLayout.addWidget(buttonBox)
         self.setLayout(mainLayout)
 
-        self.setWindowTitle("Form Layout - pythonspot.com")
+        self.setWindowTitle("Enter Patient Information")
 
 
 
     def makeform(self):
-        self.formGroupBox = QGroupBox("Form layout")
+        self.formGroupBox = QGroupBox("Details")
         layout = QFormLayout()
         self.line_edit_firstname = QLineEdit()
         self.line_edit_lastname = QLineEdit()
