@@ -1,19 +1,28 @@
 import csv
 import numpy as np
 import os
+import sys
 
 ##### LOG IN #####
-#from scripts.user_login.user_login import LoginForm
-#from scripts.user_login import user_login
-#user_login.runit()
+from scripts.user_login import user_login
+app = user_login.runit()
+#user_login.stop(app)
 
 ####### DATA ENTRY ########
 ####### INPUT ########
-from scripts.data_entry_GUI import data_entry
-data_entry_object = data_entry()
-info_list = data_entry_object.getinfo()
+from scripts import data_entry_GUI
+info_list = data_entry_GUI.runit()
+#info_list = data_entry_object.getinfo()
+print(info_list)
 first_name, last_name, date_of_birth, social_security = [str(info_list[i]) for i in (0,1,2,3)]
 print("Running WBC Differential...")
+
+####### INPUT ########
+
+
+
+
+
 #give specimen info and unique id
 from datetime import datetime
 from uuid import uuid4

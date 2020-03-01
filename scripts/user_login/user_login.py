@@ -5,7 +5,10 @@ def runit():
     app = QApplication(sys.argv)
     form = LoginForm(app)
     form.show()
-    app.exec_()
+    run = app.exec_()
+    return run
+def stop(run):
+    sys.exit(run)
 
 class LoginForm(QWidget):
     def __init__(self,app):
@@ -32,7 +35,7 @@ class LoginForm(QWidget):
         button_login.clicked.connect(self.check_password)
         layout.addWidget(button_login, 2, 0, 1, 2)
         layout.setRowMinimumHeight(2, 75)
-
+        print("Hello World!")
         self.setLayout(layout)
         #self.show()
 
