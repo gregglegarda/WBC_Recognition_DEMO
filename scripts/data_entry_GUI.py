@@ -8,10 +8,11 @@ import sys
 def runit():
     app = QApplication(sys.argv)
     dialog = data_entry(app)
-    dialog.exec_()
-    return dialog.getinfo()
+    run = dialog.exec_()
+    return dialog.getinfo(), run
 
-
+def stop(run):
+    sys.exit(run)
 
 class data_entry(QDialog):
     NumGridRows = 3
@@ -33,12 +34,13 @@ class data_entry(QDialog):
         mainLayout.addWidget(buttonBox)
         self.setLayout(mainLayout)
 
-        self.setWindowTitle("Enter Patient Information")
+        self.setWindowTitle("Laboratory Technician Terminal")
 
-
+        self.success = False
+        print("Data Entry Screen")
 
     def makeform(self):
-        self.formGroupBox = QGroupBox("Details")
+        self.formGroupBox = QGroupBox("Enter Specimen Information")
         layout = QFormLayout()
         self.line_edit_firstname = QLineEdit()
         self.line_edit_lastname = QLineEdit()
@@ -56,16 +58,18 @@ class data_entry(QDialog):
 
     def accept(self):
         msg = QMessageBox()
-        if self.line_edit_firstname.text() != '' and self.line_edit_lastname.text() != '':
+        if self.line_edit_firstname.text() != '' and self.line_edit_lastname.text() != '' and self.line_edit_dob.text() != '' and self.line_edit_ssn.text() != '':
             msg.setText('Success')
             msg.exec_()
             self.app.quit()
+            self.success = True
             return self.line_edit_firstname.text(), self.line_edit_lastname.text(), self.line_edit_dob.text(), self.line_edit_ssn.text()
 
         else:
             msg.setText('Empty Fields')
             msg.exec_()
+            self.success = False
     def getinfo(self):
-        return self.line_edit_firstname.text(), self.line_edit_lastname.text(), self.line_edit_dob.text(), self.line_edit_ssn.text()
+        return self.line_edit_firstname.text(), self.line_edit_lastname.text(), self.line_edit_dob.text(), self.line_edit_ssn.text(), self.success
 
 

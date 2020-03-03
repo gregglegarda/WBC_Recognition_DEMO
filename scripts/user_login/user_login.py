@@ -6,7 +6,8 @@ def runit():
     form = LoginForm(app)
     form.show()
     run = app.exec_()
-    return run
+    return form, run
+
 def stop(run):
     sys.exit(run)
 
@@ -41,23 +42,30 @@ class LoginForm(QWidget):
 
         button_login = QPushButton('Login')
         button_login.clicked.connect(self.check_password)
+        button_login.clicked.connect(self.success)
+        #button_login.clicked.connect(self.success)
         layout.addWidget(button_login, 3, 0, 1, 2)
         layout.setRowMinimumHeight(3, 75)
-        print("Hello World!")
+        print("Login Screen")
         self.setLayout(layout)
         #self.show()
 
     def check_password(self):
         msg = QMessageBox()
-
         if self.lineEdit_username.text() == 'Username' and self.lineEdit_password.text() == 'Password':
             msg.setText('Success')
             msg.exec_()
             self.app.quit()
-
         else:
             msg.setText('Incorrect Password')
             msg.exec_()
+
+    def success(self):
+        if self.lineEdit_username.text() == 'Username' and self.lineEdit_password.text() == 'Password':
+            result = True
+        else:
+            result = False
+        return(result)
 
 
 

@@ -191,7 +191,7 @@ class ScrollableWindow(QtWidgets.QMainWindow):
 
 
 
-        self.setWindowTitle("WBC Classifier")
+        self.setWindowTitle("Laboratory Technician Terminal")
         self.showMaximized()
 
 

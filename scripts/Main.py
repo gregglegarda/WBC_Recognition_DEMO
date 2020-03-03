@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import csv
 import numpy as np
 import os
@@ -5,24 +6,21 @@ import sys
 
 ##### LOG IN #####
 from scripts.user_login import user_login
-app = user_login.runit()
-#user_login.stop(app)
+form,run = user_login.runit()
+success = form.success()
+if success != True:
+    print("Login Closed.. Quitting..")
+    user_login.stop(run)
+
 
 ####### DATA ENTRY ########
-####### INPUT ########
+#Inputs
 from scripts import data_entry_GUI
-info_list = data_entry_GUI.runit()
-#info_list = data_entry_object.getinfo()
-print(info_list)
+info_list, running = data_entry_GUI.runit()
+if info_list[4] != True:
+    print("Data Entry Closed.. Quitting..")
+    data_entry_GUI.stop(running)
 first_name, last_name, date_of_birth, social_security = [str(info_list[i]) for i in (0,1,2,3)]
-print("Running WBC Differential...")
-
-####### INPUT ########
-
-
-
-
-
 #give specimen info and unique id
 from datetime import datetime
 from uuid import uuid4
@@ -33,7 +31,6 @@ delta = np.timedelta64(5,'h') #EST(eastern) is -5 of UCT(universal)
 todays_datetime = np.datetime64('now') - delta# timestamp right now
 specinfo = [accession, todays_datetime, specimen_type,  first_name, last_name, date_of_birth, social_security]
 specimen_images = [] #location of image to have a diff performed
-
 #give specimen image location
 test_dir = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/sample_specimen1")
 test_imgs = [os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/sample_specimen1/{}").format(i) for i in os.listdir(test_dir)]
@@ -41,8 +38,14 @@ numpred = 100 # number to predivt or output in the screen has to be divisible by
 ########## END OF DATA ENTRY ###############
 
 
+
+
+
+
+
 ####### PREDICT RESULTS, SAVE IN DATABASE,  AND RUN APPLICATION ###########
 #PREDICT GIVEN IMAGES
+print("Running WBC Differential...")
 from scripts.BloodCellRecognitionClassify import patient_WBC_images
 patientWBCimages1 = patient_WBC_images(specinfo, test_imgs)
 specimen_info, specimen_fig, specimen_prediction  = patientWBCimages1.predict_images(numpred)
