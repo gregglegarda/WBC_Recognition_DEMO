@@ -3,97 +3,110 @@ import csv
 import numpy as np
 import os
 import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PyQt5 import QtCore
 
-##### LOG IN #####
-from scripts.user_login import user_login
-form,run = user_login.runit()
-success = form.success()
-if success != True:
-    print("Login Closed.. Quitting..")
-    user_login.stop(run)
+#######################################    CREATE ONE QAPPLICATION    #######################################
+QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
+app = QApplication([])
+start_again = False
+initial_run = True
+loginapp_open = False
+docapp_open = False
+tecapp_open = False
+patapp_open = False
 
+while True:
 
-####### DATA ENTRY ########
-#Inputs
-from scripts import data_entry_GUI
-info_list, running = data_entry_GUI.runit()
-if info_list[4] != True:
-    print("Data Entry Closed.. Quitting..")
-    data_entry_GUI.stop(running)
-first_name, last_name, date_of_birth, social_security = [str(info_list[i]) for i in (0,1,2,3)]
-#give specimen info and unique id
-from datetime import datetime
-from uuid import uuid4
-uniqueid = datetime.now().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
-accession = uniqueid
-specimen_type = "Blood Smear"
-delta = np.timedelta64(5,'h') #EST(eastern) is -5 of UCT(universal)
-todays_datetime = np.datetime64('now') - delta# timestamp right now
-specinfo = [accession, todays_datetime, specimen_type,  first_name, last_name, date_of_birth, social_security]
-specimen_images = [] #location of image to have a diff performed
-#give specimen image location
-test_dir = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/sample_specimen1")
-test_imgs = [os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/sample_specimen1/{}").format(i) for i in os.listdir(test_dir)]
-numpred = 100 # number to predivt or output in the screen has to be divisible by 10
-########## END OF DATA ENTRY ###############
+    if (start_again == True) or (initial_run == True):
 
-
-
-
-
-
-
-####### PREDICT RESULTS, SAVE IN DATABASE,  AND RUN APPLICATION ###########
-#PREDICT GIVEN IMAGES
-print("Running WBC Differential...")
-from scripts.BloodCellRecognitionClassify import patient_WBC_images
-patientWBCimages1 = patient_WBC_images(specinfo, test_imgs)
-specimen_info, specimen_fig, specimen_prediction  = patientWBCimages1.predict_images(numpred)
-###### END OF PREDICT RESULTS, SAVE IN DATABASE,  AND RUN APPLICATION######
-
-
-
-
-#######GENERATE SPECIMEN DIFFERENTIAL CLASS (the count for the WBC Differential)########
-from scripts.Generate_Diff import specimen_differential
-specimen1 = specimen_differential()
-diff_results = specimen1.generate_results(specimen_prediction)
-#######END OFGENERATE SPECIMEN DIFFERENTIAL CLASS (the count for the WBC Differential)########
-
-
-
-
-#######     SAVE THE RECORD (RESULTS AND IMAGES) ON A DATABASE    ###########################
-header = ["Accession ID","Accession Date/Time","Specimen Type","First Name","Last Name","Date of Birth (MM-DD-YYYY)","Social Security Number (XXX-XX-XXXX)","Eosinophils%","Lymphocytes%","Monocytes%","Neutrophils%"]
-row_results = specinfo + diff_results
-filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
-#save results
-try:                    #try this first
-    f = open(filename)
-    with open(filename, 'a', newline='') as myfile:  # a means append, it will create a new file if it doesnt exist
-        wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-        wr.writerow(row_results)
-        print("\nPatient File Saved")
-except IOError:
-    with open(filename, 'a', newline='') as myfile:  # a means append, it will create a new file if it doesnt exist
-        wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-        wr.writerow(header)
-        wr.writerow(row_results)
-        print("\nPatient File Saved")
-#save the images based on unique id (accesson)
-specimen_fig.savefig(os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/"+str(accession)))
-#######     END OF SAVE THE RECORD (RESULTS AND IMAGES) ON A DATABASE     ###########################
+        #======================# LOG IN #=======================#
+        #if loginapp_open == True:
+            #loginapp.close()
+            #loginapp_open = False
+        #if docapp_open == True:
+            #docapp.close()
+            #docapp_open = False
+        #if patapp_open == True:
+            #patapp.close()
+            #patapp_open = False
+        #if tecapp_open == True:
+            #tecapp.close()
+            #tecapp_open = False
+        from scripts import hom_gui
+        homapp,run = hom_gui.runit(app)
+        #loginapp_open = True
+        succ, usertype = homapp.login_button()
+        #succ, usertype = homapp.login_button()
+        if succ != True:
+            print("Login Closed.. Quitting..")
+            hom_gui.stop(run)
+        else:
+            print("Home GUI Closed")
+            homapp.close()
 
 
 
 
 
-#################    RUN THE APPLICATION FOR VIEWING     #########################
-## Call class for another WBC_GUI file (Will view everything)
-#includes images with subplots
-#includes generated wbc differetial results
-from scripts.WBC_GUI import ScrollableWindow
-#fig.savefig('test.png')#save the result into a picture
-ScrollableWindow(specimen_info, specimen_fig, diff_results)#show info,predictions of image subplots (fig), and numeric diff results on window
-################   END OF RUN THE APPLICATION FOR VIEWING     ############
 
+        ############################################     RUN  TERMINALS    ######################################
+
+
+        #======================# DOCTOR GUI #======================#
+        #if loginapp_open == True:
+            #loginapp.close()
+        #if docapp_open == True:
+            #docapp.close()
+        #if patapp_open == True:
+            #patapp.close()
+        #if tecapp_open == True:
+            #tecapp.close()
+        if usertype == "Pathologist":
+            print("Running Doctor Terminal")
+            from scripts import doc_gui
+            docapp, run = doc_gui.runit(app)
+            #docapp_open = True
+
+
+        #======================# PATIENT GUI #======================#
+        #if loginapp_open == True:
+            #loginapp.close()
+        #if docapp_open == True:
+            #docapp.close()
+        #if patapp_open == True:
+            #patapp.close()
+        #if tecapp_open == True:
+            #tecapp.close()
+        if usertype == "Patient":
+            print("Running Patient Terminal")
+            from scripts import pat_gui
+            patapp, run = pat_gui.runit(app)
+            #patapp_open = True
+
+        #======================# TECHNICIAN GUI #======================#
+        #if loginapp_open == True:
+            #loginapp.close()
+        #if docapp_open == True:
+            #docapp.close()
+        #if patapp_open == True:
+            #patapp.close()
+        #if tecapp_open == True:
+            #tecapp.close()
+        if usertype == "Technician":
+            print("Running Technician Terminal")
+            from scripts import tec_gui
+            tecapp, run = tec_gui.runit(app)
+            #tecapp_open = True
+
+            #if the wbc window is open
+                #tecapp_open=False
+                #loginapp
+
+
+
+
+
+        initial_run = False
+        start_again = True
+        #### end of loop###
