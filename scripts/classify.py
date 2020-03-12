@@ -55,12 +55,12 @@ class  patient_WBC_images():
 
         ##### check results of real vs prediction and view array of images #####
         pred = model.predict_classes(x[0:numpred])
-        params = {"ytick.color": "w",
-                  "xtick.color": "w",
-                  "axes.labelcolor": "w",
-                  "axes.edgecolor": "w"}
+        params = {"ytick.color": "k",
+                  "xtick.color": "k",
+                  "axes.labelcolor": "k",
+                  "axes.edgecolor": "k"}
         plt.rcParams.update(params)
-        fig = plt.figure(figsize=(14.3,numpred*.16), num='Classifier') #14.3, 16 for 100 -- 14.3, 160 for 1000
+        fig = plt.figure(figsize=(14.3,numpred*.16), num='WBC Classifier') #14.3, 16 for 100 -- 14.3, 160 for 1000
         columns = 10
         rows = len(pred)/columns
 
@@ -93,7 +93,7 @@ class  patient_WBC_images():
             fig.use_sticky_edges = True
             plt.tick_params(labelsize=5) #sizeof the axes ticks
             title_obj = plt.title('Prediction:' + text_labels[i], fontdict={'fontsize': 7})
-            plt.setp(title_obj, color='w')
+            plt.setp(title_obj, color='k')
             ##showing the unaltered images
             img=mpimg.imread(ima)
             imgplot = plt.imshow(img)
@@ -101,10 +101,10 @@ class  patient_WBC_images():
 
 
         # custom figure colors and layout
-        fig.set_facecolor("#81C4FF")
+        fig.set_facecolor("#CEEBFB")#CEEBFB, #A3D6F5, #66A7C5, #EE3233
         fig.tight_layout()
         plt.subplots_adjust(hspace=0, wspace=0.2)
-        plt.show()
+        #plt.show()
 
         return self.specinfo, fig, prediction_x
 

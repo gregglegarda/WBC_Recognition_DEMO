@@ -2,8 +2,8 @@ from PyQt5.QtWidgets import (QMainWindow, QApplication, QComboBox, QDialog,
                              QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
                              QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
                              QVBoxLayout,QMessageBox)
-from PyQt5.QtGui import QPalette,QColor, QBrush, QPixmap
-from PyQt5 import Qt
+from PyQt5.QtGui import QPalette,QColor, QBrush, QPixmap, QIntValidator
+from PyQt5 import QtGui
 import sys
 import numpy as np
 from datetime import datetime
@@ -56,6 +56,7 @@ class data_entry(QDialog):
         self.formGroupBox.setStyleSheet("QGroupBox {background-image: url(background/texture.jpg)}")
         self.success = False
         print("Data Entry Screen")
+        self.setFocus()
         self.exec()
 
 
@@ -63,9 +64,22 @@ class data_entry(QDialog):
         self.formGroupBox = QGroupBox()
         layout = QFormLayout()
         self.line_edit_firstname = QLineEdit()
+        self.line_edit_firstname.setPlaceholderText('First Name')
+
         self.line_edit_lastname = QLineEdit()
+        self.line_edit_lastname.setPlaceholderText('Last Name')
+
         self.line_edit_dob = QLineEdit()
+        self.line_edit_dob = LineEditDOB(self.formGroupBox)
+
         self.line_edit_ssn = QLineEdit()
+        self.line_edit_ssn = LineEditSSN(self.formGroupBox)
+
+
+
+
+
+
 
         self.firstname = QLabel("First Name:")
         self.lastname = QLabel("Last Name:")
@@ -90,9 +104,9 @@ class data_entry(QDialog):
         if self.line_edit_firstname.text() != '' and self.line_edit_lastname.text() != '' and self.line_edit_dob.text() != '' and self.line_edit_ssn.text() != '':
             msg.setText('Success')
             msg.exec_()
-            self.close()
             #self.app.quit()
             self.success = True
+            self.close()
             return self.line_edit_firstname.text(), self.line_edit_lastname.text(), self.line_edit_dob.text(), self.line_edit_ssn.text()
 
         else:
@@ -110,3 +124,21 @@ class data_entry(QDialog):
         return accession, todays_datetime, specimen_type, self.line_edit_firstname.text(), self.line_edit_lastname.text(), self.line_edit_dob.text(), self.line_edit_ssn.text(), self.success
 
 
+class LineEditDOB(QLineEdit):
+    def __init__(self, parent=None):
+        QLineEdit.__init__(self, parent=parent)
+        self.setPlaceholderText('MM/DD/YYYY')
+
+    def focusInEvent(self, event):
+        self.setInputMask('99/99/9999')
+        #self.setPlaceholderText('MM/DD/YYYY')
+
+
+class LineEditSSN(QLineEdit):
+    def __init__(self, parent=None):
+        QLineEdit.__init__(self, parent=parent)
+        self.setPlaceholderText('XXX-XX-XXXX')
+
+    def focusInEvent(self, event):
+        self.setInputMask('999-99-9999')
+        #self.setPlaceholderText('XXX-XX-XXXX')

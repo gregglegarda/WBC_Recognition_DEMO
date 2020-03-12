@@ -113,13 +113,16 @@ class technician_gui(QMainWindow):
         #self.tableView.clearSpans()
         while (self.model.rowCount() > 0):
             self.model.removeRow(0)
-        with open(fileName, "r") as fileInput:
-            for row in csv.reader(fileInput):
-                self.items = [
-                    QtGui.QStandardItem(field)
-                    for field in row
-                ]
-                self.model.appendRow(self.items)
+        try:
+            with open(fileName, "r") as fileInput:
+                for row in csv.reader(fileInput):
+                    self.items = [
+                        QtGui.QStandardItem(field)
+                        for field in row
+                    ]
+                    self.model.appendRow(self.items)
+        except:
+            print("No Database")
 
     def logout_success(self):
         msg = QMessageBox()
@@ -132,9 +135,13 @@ class technician_gui(QMainWindow):
 
         ####### DATA ENTRY ########
         # Inputs
+        try:
+            self.running_wbc_gui.close()
+        except:
+            print("WBC GUI is not running")
         from scripts import runnew_data
         info_list, running = runnew_data.runit(self.app)
-
+        running.close()
 
 
         if info_list[7] != True:
@@ -179,7 +186,7 @@ class technician_gui(QMainWindow):
 
 
             #================# SAVE THE RECORD (RESULTS AND IMAGES) ON A DATABASE #================#
-            header = ["Accession ID","Accession Date/Time","Specimen Type","First Name","Last Name","Date of Birth (MM-DD-YYYY)","Social Security Number (XXX-XX-XXXX)","Eosinophils%","Lymphocytes%","Monocytes%","Neutrophils%"]
+            #header = ["Accession ID","Accession Date/Time","Specimen Type","First Name","Last Name","Date of Birth (MM-DD-YYYY)","Social Security Number (XXX-XX-XXXX)","Eosinophils%","Lymphocytes%","Monocytes%","Neutrophils%"]
             row_results = specinfo + diff_results
             filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
             #save results
@@ -192,7 +199,7 @@ class technician_gui(QMainWindow):
             except IOError:
                 with open(filename, 'a', newline='') as myfile:  # a means append, it will create a new file if it doesnt exist
                     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-                    wr.writerow(header)
+                    #wr.writerow(header)
                     wr.writerow(row_results)
                     print("\nPatient File Saved")
             #save the images based on unique id (accesson)
@@ -209,7 +216,8 @@ class technician_gui(QMainWindow):
             #includes generated wbc differetial results
             from scripts import tec_newrunresult
             #fig.savefig('test.png')#save the result into a picture
-            running = tec_newrunresult.runit(specimen_info, specimen_fig, diff_results, self.app)
+            self.running_wbc_gui = tec_newrunresult.runit(specimen_info, specimen_fig, diff_results, self.app)
+            #running.close()
             #diff_result(specimen_info, specimen_fig, diff_results, self.app)#show info,predictions of image subplots (fig), and numeric diff results on window
             #================#  END OF RUN THE APPLICATION FOR VIEWING  #================#
 

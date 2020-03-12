@@ -23,6 +23,8 @@ class home_gui(QMainWindow):
     def __init__(self,app):
         self.app = app
         super().__init__()
+        self.successful= 0
+        self.usertype = 0
         self.setWindowTitle('Osmosis Jones Counter')
         self.resize(500, 190)
 

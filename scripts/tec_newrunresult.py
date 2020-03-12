@@ -19,7 +19,7 @@ import sys
 def runit(specimen_info, specimen_fig, diff_results,app):
     resultwindow = diff_result(specimen_info, specimen_fig, diff_results,app)
     #dialog.show()
-    return resultwindow,
+    return resultwindow
 
 def stop(resultwindow):
     resultwindow.close()
