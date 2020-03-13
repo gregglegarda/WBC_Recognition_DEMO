@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QComboBox, QDialog,
                              QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
                              QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
-                             QVBoxLayout,QMessageBox)
+                             QVBoxLayout,QMessageBox, QProgressBar)
 from PyQt5.QtGui import QPalette,QColor, QBrush, QPixmap, QIntValidator
 from PyQt5 import QtGui
 import sys
@@ -72,14 +72,8 @@ class data_entry(QDialog):
         self.line_edit_dob = QLineEdit()
         self.line_edit_dob = LineEditDOB(self.formGroupBox)
 
-
         self.line_edit_ssn = QLineEdit()
         self.line_edit_ssn = LineEditSSN(self.formGroupBox)
-
-
-
-
-
 
 
         self.firstname = QLabel("First Name:")
@@ -87,27 +81,24 @@ class data_entry(QDialog):
         self.dob = QLabel("DOB:")
         self.ssn = QLabel("SSN:")
 
-
         layout.addRow(self.firstname, self.line_edit_firstname )
         layout.addRow(self.lastname, self.line_edit_lastname)
         layout.addRow(self.dob, self.line_edit_dob)
         layout.addRow(self.ssn, self.line_edit_ssn)
-        #layout.addRow(QLabel("Country:"), QComboBox())
-        #layout.addRow(QLabel("Age:"), QSpinBox())
+
         self.formGroupBox.setLayout(layout)
-
-
-
 
 
     def accept(self):
         msg = QMessageBox()
+
         if self.line_edit_firstname.text() != '' and self.line_edit_lastname.text() != '' and self.line_edit_dob.text() != '' and self.line_edit_ssn.text() != '':
+            #self.app.quit()
             msg.setText('A WBC differential will be performed')
             msg.exec_()
-            #self.app.quit()
             self.success = True
             self.close()
+
             return self.line_edit_firstname.text(), self.line_edit_lastname.text(), self.line_edit_dob.text(), self.line_edit_ssn.text()
 
         else:
@@ -124,6 +115,10 @@ class data_entry(QDialog):
         return accession, todays_datetime, self.line_edit_firstname.text(), self.line_edit_lastname.text(), self.line_edit_dob.text(), self.line_edit_ssn.text(), self.success
 
 
+
+
+
+## DOB AND SSN CLASS FORMATS
 class LineEditDOB(QLineEdit):
     def __init__(self, parent=None):
         QLineEdit.__init__(self, parent=parent)

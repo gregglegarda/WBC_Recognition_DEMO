@@ -18,7 +18,7 @@ def runit(app):
 def stop(run):
     sys.exit(run)
 
-#create login window class
+#create home window class
 class home_gui(QMainWindow):
     def __init__(self,app):
         self.app = app

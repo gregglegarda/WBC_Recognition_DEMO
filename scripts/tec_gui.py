@@ -16,7 +16,7 @@ For running the new specimen:
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QComboBox, QDialog, QTableView,
                              QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
                              QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
-                             QVBoxLayout,QMessageBox, QSizePolicy)
+                             QVBoxLayout,QMessageBox, QSizePolicy,QAbstractItemView)
 from PyQt5.QtGui import QPalette,QColor, QIcon, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import csv
@@ -98,8 +98,10 @@ class technician_gui(QMainWindow):
         self.tableView.setColumnWidth(7, 60)# L
         self.tableView.setColumnWidth(8, 60)# M
         self.tableView.setColumnWidth(9, 60) # N
-        self.tableView.horizontalHeader().setStretchLastSection(True)
 
+        self.tableView.horizontalHeader().setStretchLastSection(True)
+        self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
+        self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.widget.layout().addWidget(self.tableView, 1, 0,1, 2)
         # ==================# END OF TABLE DATABASE #==================#
 
@@ -110,6 +112,7 @@ class technician_gui(QMainWindow):
         self.line_edit_viewImage = QLineEdit()
         self.line_edit_viewImage.setPlaceholderText('Enter Accession ID')
         self.widget.layout().addWidget(self.line_edit_viewImage, 2, 0)
+        self.line_edit_viewImage.mousePressEvent = lambda _: self.line_edit_viewImage.selectAll()
 
         #view button
         viewImage_button = QPushButton('View Differential')
@@ -147,6 +150,7 @@ class technician_gui(QMainWindow):
         self.imageFolder = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/")
         self.classifiedImageList = [os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/{}").format(i) for
                                     i in os.listdir(self.imageFolder)]
+
         for imagepath in self.classifiedImageList:
             image = self.path_leaf(imagepath)
             editline = self.line_edit_viewImage.text() +".png"
@@ -161,6 +165,8 @@ class technician_gui(QMainWindow):
                 print(self.imageFolder+editline)
                 print("image is:",image)
                 print("editline is:", editline)
+
+
     def path_leaf(self, path):
         head, tail = ntpath.split(path)
         return tail or ntpath.basename(head)
@@ -181,7 +187,6 @@ class technician_gui(QMainWindow):
         self.loadCsv(self.fileName)
 
     def loadCsv(self, fileName):
-        #self.tableView.clearSpans()
         while (self.model.rowCount() > 0):
             self.model.removeRow(0)
         try:
@@ -235,12 +240,16 @@ class technician_gui(QMainWindow):
         ########## END OF DATA ENTRY ###############
 
 
+
+
         if dataentry == "success":
+
+
         ####### PREDICT RESULTS, GENERATE COUNTS, SAVE IN DATABASE,  AND RUN APPLICATION ###########
-            #================# PREDICT GIVEN IMAGES #================#
+            #================# PREDICT GIVEN IMAGES  AND RUN THE LOAD BAR#================#
             print("Running WBC Differential...")
-            from scripts.classify import patient_WBC_images
-            patientWBCimages1 = patient_WBC_images(specinfo, test_imgs)
+            from scripts.classify import classifier
+            patientWBCimages1 = classifier(specinfo, test_imgs, self.app)
             specimen_info, specimen_fig, specimen_prediction  = patientWBCimages1.predict_images(numpred)
             #================# END OF PREDICT RESULTS  #================#
 
@@ -261,7 +270,7 @@ class technician_gui(QMainWindow):
             row_results = specinfo + diff_results
             filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
             #save results
-            try:                    #try this first
+            try:                    #try this first if there is a file. if none, go to except
                 f = open(filename)
                 with open(filename, 'a', newline='') as myfile:  # a means append, it will create a new file if it doesnt exist
                     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
@@ -277,6 +286,7 @@ class technician_gui(QMainWindow):
             specimen_fig.savefig(os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/"+str(accession)))
             #================# END OF SAVE THE RECORD (RESULTS AND IMAGES) ON A DATABASE   #================#
             saved = "yes"
+
 
 
 

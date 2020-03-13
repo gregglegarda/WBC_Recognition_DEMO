@@ -8,13 +8,58 @@ from keras import models
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import load_model
 import matplotlib.image as mpimg
+from PyQt5.QtGui import QPalette,QColor, QBrush, QPixmap
+from PyQt5.QtWidgets import (QMainWindow, QApplication, QComboBox, QDialog,
+                             QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
+                             QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
+                             QVBoxLayout,QMessageBox, QProgressBar)
+from PyQt5.QtCore import QEventLoop
 
 
+class  classifier(QDialog):
+    def __init__(self, specimenInfo, test_imgs,app):
 
-class  patient_WBC_images():
-    def __init__(self, specimenInfo, test_imgs):
+
+        self.app = app
+        super(classifier, self).__init__()
+
         self.specinfo = specimenInfo
         self.test_imgs = test_imgs
+        self.progressPercent=0
+
+        self.formGroupBox = QGroupBox()
+        layout = QFormLayout()
+        # progressbar
+        self.progressBar_runNew = QProgressBar()
+        self.progressBar_runNew.setGeometry(200, 80, 250, 20)
+        # ----progress bar
+        layout.addRow(self.progressBar_runNew)
+        self.formGroupBox.setLayout(layout)
+
+        #runButton = QPushButton(self.tr("&Run"))
+        #runButton.setDefault(True)
+        #buttonBox = QDialogButtonBox()
+        #buttonBox.addButton(runButton, QDialogButtonBox.AcceptRole)
+        #buttonBox.accepted.connect(self.accept)
+
+        mainLayout = QVBoxLayout()
+        mainLayout.addWidget(self.formGroupBox)
+        #mainLayout.addWidget(buttonBox)
+        self.setLayout(mainLayout)
+
+        self.setWindowTitle("Progress")
+
+
+        # THEME COLOR
+        self.palette = self.palette()
+        self.palette.setBrush(QPalette.Background, QBrush(QPixmap("background/texture.jpg")))
+        self.setPalette(self.palette)
+        self.formGroupBox.setStyleSheet("QGroupBox {background-image: url(background/texture.jpg)}")
+        print("progress Bar")
+
+
+        #self.exec()
+
 
     def predict_images(self, numpred):
 
@@ -30,9 +75,16 @@ class  patient_WBC_images():
         def read_and_process_image(list_of_images):
             X = []
             y = []
-            image_counter  = 0
+            image_counter = 0
+
+
+            self.exec()
+
+
+
             for image in list_of_images:
-                image_counter= image_counter+1
+                self.progressBar_runNew.setValue(self.progressPercent)#progressbar
+
                 try:
                     X.append(cv2.resize(cv2.imread(image,cv2.IMREAD_COLOR),(150,150), interpolation= cv2.INTER_CUBIC))
 
@@ -42,6 +94,11 @@ class  patient_WBC_images():
                 if image in self.test_imgs:   #test label 0
                     y.append(0)
                 print("Labeling image #",image_counter , " of ", len(self.test_imgs))
+                image_counter = image_counter + 1
+
+                ##PROGRESS bar
+                print("progressbar percent: ", self.progressPercent)
+                self.progressPercent = (image_counter/(len(self.test_imgs)+numpred))*100
 
             return X
 

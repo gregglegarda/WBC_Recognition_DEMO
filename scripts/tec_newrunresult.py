@@ -204,7 +204,7 @@ class diff_result(QMainWindow):
         #THEME COLOR
         self.palette = self.palette()
         #self.palette.setColor(QPalette.Window, QColor("#25211f"))
-        self.palette.setBrush(QPalette.Background, QBrush(QPixmap("background/texture.jpg")))
+        self.palette.setBrush(QPalette.Background, QBrush(QPixmap("background/background.jpg")))
         #self.palette.setColor(QPalette.Button, QColor('red'))
         self.setPalette(self.palette)
 
