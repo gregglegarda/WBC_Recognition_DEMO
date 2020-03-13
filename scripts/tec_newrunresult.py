@@ -33,7 +33,7 @@ class diff_result(QMainWindow):
         self.widget = QtWidgets.QWidget()
         self.setCentralWidget(self.widget)
         self.widget.setLayout(QtWidgets.QVBoxLayout())
-        self.widget.layout().setContentsMargins(0,0,0,0)
+        self.widget.layout().setContentsMargins(50,50,50,50)
         self.widget.layout().setSpacing(0)
 
         #box widget below main
@@ -119,7 +119,7 @@ class diff_result(QMainWindow):
 
         # specimen info.... add self later to pas it in
         # self.specimen_info = info
-        aa, bb, cc, dd, ee, ff, gg = [info[j] for j in (0, 1, 2, 3, 4, 5, 6)]
+        aa, bb, cc, dd, ee, ff = [info[j] for j in (0, 1, 2, 3, 4, 5)]
         self.specimen_info = QLabel()
         self.specimen_info.setAlignment(QtCore.Qt.AlignTop)
         self.specimen_info.setStyleSheet("QLabel {background-image: url(background/texture.jpg)}")
@@ -129,12 +129,11 @@ class diff_result(QMainWindow):
             '\n----------------------------------------------------------------------------------------------------------------------'
             '\n\tSpecimen Accession Number\t{aa}'
             '\n\tAccession Date/Time\t\t{bb}'
-            '\n\tSpecimen Type\t\t\t{cc}'
-            '\n\tPatient First Name\t\t{dd}'
-            '\n\tPatient Last Name\t\t{ee}'
-            '\n\tDate of Birth\t\t\t{ff}'
-            '\n\tSocial Security Number\t\t{gg}'
-            .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, gg=gg))
+            '\n\tPatient First Name\t\t{cc}'
+            '\n\tPatient Last Name\t\t{dd}'
+            '\n\tDate of Birth\t\t\t{ee}'
+            '\n\tSocial Security Number\t\t{ff}'
+            .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff,))
 
         # percent part
         self.percent = QLabel()

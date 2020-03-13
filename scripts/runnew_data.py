@@ -72,6 +72,7 @@ class data_entry(QDialog):
         self.line_edit_dob = QLineEdit()
         self.line_edit_dob = LineEditDOB(self.formGroupBox)
 
+
         self.line_edit_ssn = QLineEdit()
         self.line_edit_ssn = LineEditSSN(self.formGroupBox)
 
@@ -102,7 +103,7 @@ class data_entry(QDialog):
     def accept(self):
         msg = QMessageBox()
         if self.line_edit_firstname.text() != '' and self.line_edit_lastname.text() != '' and self.line_edit_dob.text() != '' and self.line_edit_ssn.text() != '':
-            msg.setText('Success')
+            msg.setText('A WBC differential will be performed')
             msg.exec_()
             #self.app.quit()
             self.success = True
@@ -117,28 +118,23 @@ class data_entry(QDialog):
 
         uniqueid = datetime.now().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
         accession = uniqueid
-        specimen_type = "Blood Smear"
         delta = np.timedelta64(5, 'h')  # EST(eastern) is -5 of UCT(universal)
         todays_datetime = np.datetime64('now') - delta  # timestamp right now
 
-        return accession, todays_datetime, specimen_type, self.line_edit_firstname.text(), self.line_edit_lastname.text(), self.line_edit_dob.text(), self.line_edit_ssn.text(), self.success
+        return accession, todays_datetime, self.line_edit_firstname.text(), self.line_edit_lastname.text(), self.line_edit_dob.text(), self.line_edit_ssn.text(), self.success
 
 
 class LineEditDOB(QLineEdit):
     def __init__(self, parent=None):
         QLineEdit.__init__(self, parent=parent)
         self.setPlaceholderText('MM/DD/YYYY')
-
     def focusInEvent(self, event):
         self.setInputMask('99/99/9999')
-        #self.setPlaceholderText('MM/DD/YYYY')
-
 
 class LineEditSSN(QLineEdit):
     def __init__(self, parent=None):
         QLineEdit.__init__(self, parent=parent)
         self.setPlaceholderText('XXX-XX-XXXX')
-
     def focusInEvent(self, event):
         self.setInputMask('999-99-9999')
-        #self.setPlaceholderText('XXX-XX-XXXX')
+

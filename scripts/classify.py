@@ -101,7 +101,7 @@ class  patient_WBC_images():
 
 
         # custom figure colors and layout
-        fig.set_facecolor("#CEEBFB")#CEEBFB, #A3D6F5, #66A7C5, #EE3233
+        fig.set_facecolor("w")#CEEBFB, #A3D6F5, #66A7C5, #EE3233
         fig.tight_layout()
         plt.subplots_adjust(hspace=0, wspace=0.2)
         #plt.show()

@@ -16,13 +16,17 @@ For running the new specimen:
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QComboBox, QDialog, QTableView,
                              QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
                              QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
-                             QVBoxLayout,QMessageBox)
-from PyQt5.QtGui import QPalette,QColor
+                             QVBoxLayout,QMessageBox, QSizePolicy)
+from PyQt5.QtGui import QPalette,QColor, QIcon, QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import csv
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import os
+import ntpath
+
+
+
 import numpy as np
 
 def runit(app):
@@ -41,65 +45,132 @@ class technician_gui(QMainWindow):
     def __init__(self,app):
         self.app = app
         super(technician_gui, self).__init__()
-        ##the main widget layout
+        #==================# MAIN WIDGET LAYOUT #==================#
         self.widget = QtWidgets.QWidget()
         self.setCentralWidget(self.widget)
         self.widget.setLayout(QtWidgets.QGridLayout())
-        self.widget.layout().setContentsMargins(10, 10, 10, 10)
-        self.widget.layout().setSpacing(0)
+        self.widget.layout().setContentsMargins(50, 50, 50, 50)
+        self.widget.layout().setSpacing(5)
         self.setWindowTitle("Laboratory Technician Terminal")
-        self.widget.layout().setColumnMinimumWidth(0, 50)
-        self.widget.layout().setColumnMinimumWidth(5, 50)
-        self.widget.layout().setRowMinimumHeight(0, 10)
-        self.widget.layout().setRowMinimumHeight(6, 10)
+        #self.widget.layout().setColumnMinimumWidth(0, 10)
+        #self.widget.layout().setColumnMinimumWidth(1, 10)
+        #self.widget.layout().setRowMinimumHeight(0, 10)
+        #self.widget.layout().setRowMinimumHeight(2, 200)
+        #self.widget.layout().setRowMinimumHeight(6, 10)
         self.showMaximized()
-
         #THEME COLOR
         self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
         print("Technician GUI Screen")
+        # ==================# END OF MAIN WIDGET LAYOUT #==================#
 
-        ##LOGOUT BUTTON RUN NEW SPECIMEN BUTTON
-        button_logout = QPushButton('Logout')
-        button_logout.clicked.connect(self.logout_success)
-        self.widget.layout().addWidget(button_logout, 2, 0)
 
+        #==================# BUTTONS #==================#
         #RUN NEW SPECIMEN BUTTON
         button_run_new = QPushButton('Run New Specimen')
         button_run_new.clicked.connect(self.button_run_new_clicked)
-        self.widget.layout().addWidget(button_run_new, 0, 0)
+        self.widget.layout().addWidget(button_run_new, 0, 0,1,1)
 
         # UPDATE DATABASE BUTTON
         pushButtonLoad = QtWidgets.QPushButton(self.widget)
         pushButtonLoad.setText("Update Database")
         pushButtonLoad.clicked.connect(self.on_pushButtonLoad_clicked)
-        self.widget.layout().addWidget(pushButtonLoad, 1, 0)
+        self.widget.layout().addWidget(pushButtonLoad, 0, 1,1,1)
 
+        #==================# END OF BUTTONS #==================#
 
-        #TABLE DATABASE
-
+        #==================# TABLE DATABASE #==================#
         filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
         self.items = []
         self.fileName = filename
         self.on_pushButtonLoad_clicked
         self.model = QtGui.QStandardItemModel(self.widget)
-        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'Type', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %'])
+        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %'])
 
         self.tableView = QTableView(self.widget)
         self.tableView.setModel(self.model)
-        self.tableView.setColumnWidth(0, 160)#id
-        self.tableView.setColumnWidth(1, 150)#date
-        self.tableView.setColumnWidth(2, 100)#type
-        self.tableView.setColumnWidth(3, 125)#first
-        self.tableView.setColumnWidth(4, 125)#last
-        self.tableView.setColumnWidth(5, 100)# DOB
-        self.tableView.setColumnWidth(6, 100)# SSN
-        self.tableView.setColumnWidth(7, 75)# E
-        self.tableView.setColumnWidth(8, 75)# L
-        self.tableView.setColumnWidth(9, 75)# M
-        self.tableView.setColumnWidth(10, 75) # N
+        self.tableView.setColumnWidth(0, 430)#id
+        self.tableView.setColumnWidth(1, 160)#date
+        self.tableView.setColumnWidth(2, 140)#first
+        self.tableView.setColumnWidth(3, 140)#last
+        self.tableView.setColumnWidth(4, 100)# DOB
+        self.tableView.setColumnWidth(5, 110)# SSN
+        self.tableView.setColumnWidth(6, 60)# E
+        self.tableView.setColumnWidth(7, 60)# L
+        self.tableView.setColumnWidth(8, 60)# M
+        self.tableView.setColumnWidth(9, 60) # N
         self.tableView.horizontalHeader().setStretchLastSection(True)
 
-        self.widget.layout().addWidget(self.tableView, 0, 1,0, 6)
+        self.widget.layout().addWidget(self.tableView, 1, 0,1, 2)
+        # ==================# END OF TABLE DATABASE #==================#
+
+
+        # ==================# VIEW IMAGE DATABASE #==================#
+
+        #Qlineedit
+        self.line_edit_viewImage = QLineEdit()
+        self.line_edit_viewImage.setPlaceholderText('Enter Accession ID')
+        self.widget.layout().addWidget(self.line_edit_viewImage, 2, 0)
+
+        #view button
+        viewImage_button = QPushButton('View Differential')
+        viewImage_button.clicked.connect(self.button_find_image_clicked)
+        self.widget.layout().addWidget(viewImage_button, 2, 1)
+
+        #image box
+        self.imageView = QLabel(self.widget)
+        self.pixmap = QPixmap("background/image.png")
+        self.imageView.setPixmap(self.pixmap)
+        # scroller
+        self.scroll = QtWidgets.QScrollArea(self.widget)
+        self.scroll.setWidget(self.imageView)
+        self.widget.layout().addWidget(self.scroll, 3, 0, 1, 2)
+
+        # ==================# END VIEW IMAGE DATABASE #==================#
+
+        ##LOGOUT BUTTON RUN NEW SPECIMEN BUTTON
+        button_logout = QPushButton('Logout')
+        button_logout.clicked.connect(self.logout_success)
+        self.widget.layout().addWidget(button_logout, 4, 1)
+
+
+
+    ######################   FUNCTIONS    ############################
+
+
+    #===============# FIND IMAGE BUTTON  AND VIEW#===============#
+
+
+
+    @QtCore.pyqtSlot()
+    def button_find_image_clicked(self):
+        # directory
+        self.imageFolder = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/")
+        self.classifiedImageList = [os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/{}").format(i) for
+                                    i in os.listdir(self.imageFolder)]
+        for imagepath in self.classifiedImageList:
+            image = self.path_leaf(imagepath)
+            editline = self.line_edit_viewImage.text() +".png"
+            if image == editline:
+
+                self.pixmap = QPixmap(self.imageFolder+editline)
+                self.imageView.setPixmap(self.pixmap)
+                # scroller
+                #self.scroll = QtWidgets.QScrollArea(self.widget)
+                #self.scroll.setWidget(self.imageView)
+                #self.widget.layout().addWidget(self.scroll, 5, 1, 6, 2)
+                print(self.imageFolder+editline)
+                print("image is:",image)
+                print("editline is:", editline)
+    def path_leaf(self, path):
+        head, tail = ntpath.split(path)
+        return tail or ntpath.basename(head)
+
+
+
+
+
+
+
 
     @QtCore.pyqtSlot()
     def button_run_new_clicked(self):
@@ -144,15 +215,15 @@ class technician_gui(QMainWindow):
         running.close()
 
 
-        if info_list[7] != True:
+        if info_list[6] != True:
             print(info_list)
             print("Data Entry Closed")
             return False
 
         else:
             ### run the loading bar here
-            accession, todays_datetime, specimen_type, first_name, last_name, date_of_birth, social_security = [str(info_list[i]) for i in (0, 1, 2, 3, 4, 5, 6)]
-            specinfo = [accession, todays_datetime, specimen_type, first_name, last_name, date_of_birth, social_security]
+            accession, todays_datetime, first_name, last_name, date_of_birth, social_security = [str(info_list[i]) for i in (0, 1, 2, 3, 4, 5)]
+            specinfo = [accession, todays_datetime, first_name, last_name, date_of_birth, social_security]
             specimen_images = []  # location of image to have a diff performed
             # give specimen image location
             test_dir = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/sample_specimen1")

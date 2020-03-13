@@ -25,7 +25,8 @@ class login(QDialog):
         self.app = app
         super(login, self).__init__()
 
-
+        self.username_info = "username"
+        self.password_info = "password"
         self.makeform()
 
 
@@ -70,7 +71,7 @@ class login(QDialog):
 
         button_login = QPushButton('Login')
         button_login.clicked.connect(self.check_password)
-        #button_login.clicked.connect(self.successlogin)
+        button_login.clicked.connect(self.successlogin)
 
 
         layout.addRow(self.username, self.line_edit_username )
@@ -85,12 +86,17 @@ class login(QDialog):
 
     def check_password(self):
         msg = QMessageBox()
-        if self.line_edit_username.text() == 'Username' and self.line_edit_password.text() == 'Password':
+        if (self.line_edit_username.text() == self.username_info) and (self.line_edit_password.text() == self.password_info):
             user_type = str(self.combo_label_person.currentText())
             result = True
             msg.setText('Success')
             msg.exec_()
-            self.app.quit()
+            #self.app.quit()
+        elif (self.line_edit_username.text() == "") or (self.line_edit_password.text() == ""):
+            msg.setText('Empty Fields')
+            msg.exec_()
+            user_type= None
+            result = False
         else:
             msg.setText('Incorrect Password')
             msg.exec_()
@@ -100,9 +106,10 @@ class login(QDialog):
 
 
     def successlogin(self):
-        if self.line_edit_username.text() == 'Username' and self.line_edit_password.text() == 'Password':
+        if (self.line_edit_username.text() == self.username_info) and (self.line_edit_password.text() == self.password_info):
             user_type = str(self.combo_label_person.currentText())
             result = True
+            self.app.quit()
         else:
             user_type= None
             result = False

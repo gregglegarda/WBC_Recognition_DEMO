@@ -33,15 +33,13 @@ class home_gui(QMainWindow):
         self.widget = QtWidgets.QWidget()
         self.setCentralWidget(self.widget)
         self.widget.setLayout(QtWidgets.QGridLayout())
-        self.widget.layout().setContentsMargins(10, 10, 10, 10)
+        self.widget.layout().setContentsMargins(500, 250, 500, 250)
         self.widget.layout().setSpacing(1)
-        self.widget.layout().setColumnMinimumWidth(0, 500)
-        self.widget.layout().setColumnMinimumWidth(2, 500)
-        self.widget.layout().setRowMinimumHeight(0, 300)
-        self.widget.layout().setRowMinimumHeight(3, 300)
+        self.widget.layout().setColumnMinimumWidth(0, 100)
+        self.widget.layout().setColumnMinimumWidth(2, 100)
+        self.widget.layout().setRowMinimumHeight(0, 100)
+        self.widget.layout().setRowMinimumHeight(3, 100)
         self.showMaximized()
-
-
 
         button_createaccount = QPushButton('Create Account')
         button_createaccount.clicked.connect(self.button_createaccount_clicked)
@@ -62,9 +60,7 @@ class home_gui(QMainWindow):
         #self.login_button()
         from scripts import login
         loginapp = login.runit(self.app)
-        self.successful, self.usertype = loginapp.check_password()
-
-
+        self.successful, self.usertype = loginapp.successlogin()
 
     def login_button(self):
         return self.successful, self.usertype
