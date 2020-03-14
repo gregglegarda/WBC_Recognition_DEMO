@@ -46,11 +46,14 @@ class technician_gui(QMainWindow):
         self.app = app
         super(technician_gui, self).__init__()
         #==================# MAIN WIDGET LAYOUT #==================#
+        #Big window
+
+
         self.widget = QtWidgets.QWidget()
         self.setCentralWidget(self.widget)
         self.widget.setLayout(QtWidgets.QGridLayout())
-        self.widget.layout().setContentsMargins(50, 50, 50, 50)
-        self.widget.layout().setSpacing(5)
+        self.widget.layout().setContentsMargins(40, 40, 40, 40)
+        self.widget.layout().setSpacing(10)
         self.setWindowTitle("Laboratory Technician Terminal")
         #self.widget.layout().setColumnMinimumWidth(0, 10)
         #self.widget.layout().setColumnMinimumWidth(1, 10)
@@ -61,20 +64,38 @@ class technician_gui(QMainWindow):
         #THEME COLOR
         self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
         print("Technician GUI Screen")
+
+        #Small group1
+        self.GroupBox1 = QGroupBox()
+        layout1 = QGridLayout()
+        self.GroupBox1.setLayout(layout1)
+        layout1.setSpacing(5)
+        self.widget.layout().addWidget(self.GroupBox1, 0, 0,1,3)
+
+
+        # Small group2
+        self.GroupBox2 = QGroupBox()
+        layout2 = QGridLayout()
+        self.GroupBox2.setLayout(layout2)
+        layout2.setSpacing(5)
+        self.widget.layout().addWidget(self.GroupBox2, 1, 0,1,3)
+
         # ==================# END OF MAIN WIDGET LAYOUT #==================#
+
 
 
         #==================# BUTTONS #==================#
         #RUN NEW SPECIMEN BUTTON
         button_run_new = QPushButton('Run New Specimen')
         button_run_new.clicked.connect(self.button_run_new_clicked)
-        self.widget.layout().addWidget(button_run_new, 0, 0,1,1)
-
+        #layout1.addRow(button_run_new)
+        layout1.addWidget(button_run_new, 0, 0, 1, 1)
         # UPDATE DATABASE BUTTON
         pushButtonLoad = QtWidgets.QPushButton(self.widget)
         pushButtonLoad.setText("Update Database")
         pushButtonLoad.clicked.connect(self.on_pushButtonLoad_clicked)
-        self.widget.layout().addWidget(pushButtonLoad, 0, 1,1,1)
+        #layout1.addRow(button_run_new, pushButtonLoad)
+        layout1.addWidget(pushButtonLoad, 0, 1, 1, 1)
 
         #==================# END OF BUTTONS #==================#
 
@@ -102,7 +123,8 @@ class technician_gui(QMainWindow):
         self.tableView.horizontalHeader().setStretchLastSection(True)
         self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.widget.layout().addWidget(self.tableView, 1, 0,1, 2)
+        #layout1.addRow(self.tableView)
+        layout1.addWidget(self.tableView, 1, 0, 1, 2)
         # ==================# END OF TABLE DATABASE #==================#
 
 
@@ -111,13 +133,14 @@ class technician_gui(QMainWindow):
         #Qlineedit
         self.line_edit_viewImage = QLineEdit()
         self.line_edit_viewImage.setPlaceholderText('Enter Accession ID')
-        self.widget.layout().addWidget(self.line_edit_viewImage, 2, 0)
         self.line_edit_viewImage.mousePressEvent = lambda _: self.line_edit_viewImage.selectAll()
+        layout2.addWidget(self.line_edit_viewImage, 0, 0, 1,2)
 
         #view button
         viewImage_button = QPushButton('View Differential')
         viewImage_button.clicked.connect(self.button_find_image_clicked)
-        self.widget.layout().addWidget(viewImage_button, 2, 1)
+        #layout2.addRow(self.line_edit_viewImage, viewImage_button)
+        layout2.addWidget(viewImage_button, 0, 2, 1, 1)
 
         #image box
         self.imageView = QLabel(self.widget)
@@ -126,14 +149,16 @@ class technician_gui(QMainWindow):
         # scroller
         self.scroll = QtWidgets.QScrollArea(self.widget)
         self.scroll.setWidget(self.imageView)
-        self.widget.layout().addWidget(self.scroll, 3, 0, 1, 2)
+        #layout2.addRow(self.scroll)
+        layout2.addWidget(self.scroll, 1, 0, 1, 3)
 
         # ==================# END VIEW IMAGE DATABASE #==================#
 
         ##LOGOUT BUTTON RUN NEW SPECIMEN BUTTON
         button_logout = QPushButton('Logout')
         button_logout.clicked.connect(self.logout_success)
-        self.widget.layout().addWidget(button_logout, 4, 1)
+        #layout2.addRow(button_logout)
+        self.widget.layout().addWidget(button_logout, 2, 2)
 
 
 
@@ -290,7 +315,7 @@ class technician_gui(QMainWindow):
 
 
 
-        if saved == "yes":
+        if saved == "yesno":
             #================#   RUN THE APPLICATION FOR VIEWING   #================#
             ## Call class for another WBC_GUI file (Will view everything)
             #includes images with subplots
