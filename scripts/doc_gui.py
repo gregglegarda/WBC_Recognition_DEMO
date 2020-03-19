@@ -2,14 +2,12 @@
 """
 This script is the whole gui QMainWindow of the Doctor Terminal.
 It includes :
-    the layout (columns and rows)
+    The abnormal database (to be reviewed)
+    Reviewed database (commented by the pathologist)
+    View Images
+    Comment section
     Logout button
-    Run new specimen button
-For running the new specimen:
-    take the data entered in the Qdialog window using runnew_data.py
-    generate the counts using another script using gen_diff.py
-    save it in a database
-    and run the visual of the results
+
 """
 
 
@@ -65,7 +63,7 @@ class doctor_gui(QMainWindow):
         self.showMaximized()
         #THEME COLOR
         self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
-        print("Technician GUI Screen")
+        print("Pathologist GUI Screen")
 
         #Small group1
         self.GroupBox1 = QGroupBox()
@@ -95,7 +93,7 @@ class doctor_gui(QMainWindow):
         #==================# BUTTONS #==================#
         #TO BE REVIEWED BUTTON
         pushButtonUnreviewed = QtWidgets.QPushButton(self.widget)
-        pushButtonUnreviewed.setText("To Be Reviewed")
+        pushButtonUnreviewed.setText("In Progress")
         pushButtonUnreviewed.clicked.connect(self.on_pushButtonLoad_clicked)
         layout1.addWidget(pushButtonUnreviewed, 0, 0, 1, 1)
         # REVIEWED BUTTON
