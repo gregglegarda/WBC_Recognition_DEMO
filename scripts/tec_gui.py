@@ -284,7 +284,7 @@ class technician_gui(QMainWindow):
             #================# GENERATE SPECIMEN DIFFERENTIAL CLASS (the count for the WBC Differential)#================#
             from scripts.gen_diff import specimen_differential
             specimen1 = specimen_differential()
-            diff_results = specimen1.generate_results(specimen_prediction)
+            diff_results, flagged_result = specimen1.generate_results(specimen_prediction)
             #================#END OFGENERATE SPECIMEN DIFFERENTIAL CLASS (the count for the WBC Differential)#================#
 
 
@@ -294,19 +294,35 @@ class technician_gui(QMainWindow):
             #header = ["Accession ID","Accession Date/Time","Specimen Type","First Name","Last Name","Date of Birth (MM-DD-YYYY)","Social Security Number (XXX-XX-XXXX)","Eosinophils%","Lymphocytes%","Monocytes%","Neutrophils%"]
             row_results = specinfo + diff_results
             filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
-            #save results
+            filename2 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_abnormal.csv")
+            #save results to csv files
             try:                    #try this first if there is a file. if none, go to except
-                f = open(filename)
                 with open(filename, 'a', newline='') as myfile:  # a means append, it will create a new file if it doesnt exist
                     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
                     wr.writerow(row_results)
-                    print("\nPatient File Saved")
+                    print("\nPatient File Saved in Database")
             except IOError:
                 with open(filename, 'a', newline='') as myfile:  # a means append, it will create a new file if it doesnt exist
                     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
                     #wr.writerow(header)
                     wr.writerow(row_results)
-                    print("\nPatient File Saved")
+                    print("\nPatient File Saved in Database")
+
+            # save results here if flagged result is F
+            if flagged_result == "F":
+                try:  # try this first if there is a file. if none, go to except
+                    with open(filename2, 'a',
+                              newline='') as myfile2:  # a means append, it will create a new file if it doesnt exist
+                        wr2 = csv.writer(myfile2, quoting=csv.QUOTE_ALL)
+                        wr2.writerow(row_results)
+                        print("\nPatient File Saved in Abnormal Database")
+                except IOError:
+                    with open(filename2, 'a',
+                              newline='') as myfile2:  # a means append, it will create a new file if it doesnt exist
+                        wr2 = csv.writer(myfile2, quoting=csv.QUOTE_ALL)
+                        #wr2.writerow(header)
+                        wr2.writerow(row_results)
+                        print("\nPatient File Saved in Abnormal Database")
             #save the images based on unique id (accesson)
             specimen_fig.savefig(os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/"+str(accession)))
             #================# END OF SAVE THE RECORD (RESULTS AND IMAGES) ON A DATABASE   #================#
