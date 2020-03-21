@@ -104,7 +104,7 @@ class doctor_gui(QMainWindow):
         #==================# END OF BUTTONS #==================#
 
         #==================# TABLE DATABASE #==================#
-        filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
+        filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_abnormal.csv")
         self.items = []
         self.fileName = filename
         self.on_pushButtonLoad_clicked
@@ -231,9 +231,7 @@ class doctor_gui(QMainWindow):
 
 
 
-    @QtCore.pyqtSlot()
-    def button_run_new_clicked(self):
-        self.run_specimen()
+
 
     @QtCore.pyqtSlot()
     def on_pushButtonLoad_clicked(self):
@@ -260,3 +258,6 @@ class doctor_gui(QMainWindow):
         ## go to login screen
         self.close()
 
+    @QtCore.pyqtSlot()
+    def button_run_new_clicked(self):
+        self.run_specimen()
