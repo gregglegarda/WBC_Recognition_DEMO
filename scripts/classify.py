@@ -16,25 +16,24 @@ from PyQt5.QtWidgets import (QMainWindow, QApplication, QComboBox, QDialog,
 from PyQt5.QtCore import QEventLoop
 
 
-class  classifier(QDialog):
-    def __init__(self, specimenInfo, test_imgs,app):
+class  classifier():#QDialog):
+    def __init__(self, specimenInfo, test_imgs):#,w):#, app):
 
-
-        self.app = app
+        #self.app = app
         super(classifier, self).__init__()
 
         self.specinfo = specimenInfo
         self.test_imgs = test_imgs
-        self.progressPercent=0
+        #self.progressPercent=0
 
-        self.formGroupBox = QGroupBox()
-        layout = QFormLayout()
+        #self.formGroupBox = QGroupBox()
+        #layout = QFormLayout()
         # progressbar
-        self.progressBar_runNew = QProgressBar()
-        self.progressBar_runNew.setGeometry(200, 80, 250, 20)
+        #self.progressBar_runNew = QProgressBar()
+        #self.progressBar_runNew.setGeometry(200, 80, 250, 20)
         # ----progress bar
-        layout.addRow(self.progressBar_runNew)
-        self.formGroupBox.setLayout(layout)
+        #layout.addRow(self.progressBar_runNew)
+        #self.formGroupBox.setLayout(layout)
 
         #runButton = QPushButton(self.tr("&Run"))
         #runButton.setDefault(True)
@@ -42,20 +41,20 @@ class  classifier(QDialog):
         #buttonBox.addButton(runButton, QDialogButtonBox.AcceptRole)
         #buttonBox.accepted.connect(self.accept)
 
-        mainLayout = QVBoxLayout()
-        mainLayout.addWidget(self.formGroupBox)
+        #mainLayout = QVBoxLayout()
+        #mainLayout.addWidget(self.formGroupBox)
         #mainLayout.addWidget(buttonBox)
-        self.setLayout(mainLayout)
+        #self.setLayout(mainLayout)
 
-        self.setWindowTitle("Progress")
+        #self.setWindowTitle("Progress")
 
 
         # THEME COLOR
-        self.palette = self.palette()
-        self.palette.setBrush(QPalette.Background, QBrush(QPixmap("background/texture.jpg")))
-        self.setPalette(self.palette)
-        self.formGroupBox.setStyleSheet("QGroupBox {background-image: url(background/texture.jpg)}")
-        print("progress Bar")
+        #self.palette = self.palette()
+        #self.palette.setBrush(QPalette.Background, QBrush(QPixmap("background/texture.jpg")))
+        #self.setPalette(self.palette)
+        #self.formGroupBox.setStyleSheet("QGroupBox {background-image: url(background/texture.jpg)}")
+        #print("progress Bar")
 
 
         #self.exec()
@@ -78,12 +77,12 @@ class  classifier(QDialog):
             image_counter = 0
 
 
-            self.exec()
+            #self.exec()
 
 
 
             for image in list_of_images:
-                self.progressBar_runNew.setValue(self.progressPercent)#progressbar
+                #self.progressBar_runNew.setValue(self.progressPercent)#progressbar
 
                 try:
                     X.append(cv2.resize(cv2.imread(image,cv2.IMREAD_COLOR),(150,150), interpolation= cv2.INTER_CUBIC))
@@ -97,8 +96,8 @@ class  classifier(QDialog):
                 image_counter = image_counter + 1
 
                 ##PROGRESS bar
-                print("progressbar percent: ", self.progressPercent)
-                self.progressPercent = (image_counter/(len(self.test_imgs)+numpred))*100
+                #print("progressbar percent: ", self.progressPercent)
+                #self.progressPercent = (image_counter/(len(self.test_imgs)+numpred))*100
 
             return X
 

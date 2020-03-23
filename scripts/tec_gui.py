@@ -121,6 +121,7 @@ class technician_gui(QMainWindow):
         self.tableView.setColumnWidth(9, 60) # N
 
         self.tableView.horizontalHeader().setStretchLastSection(True)
+        self.tableView.setSortingEnabled(True)
         self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         #layout1.addRow(self.tableView)
@@ -243,6 +244,7 @@ class technician_gui(QMainWindow):
         from scripts import runnew_data
         info_list, running = runnew_data.runit(self.app)
         running.close()
+        running.reject()
 
 
         if info_list[6] != True:
@@ -273,9 +275,16 @@ class technician_gui(QMainWindow):
         ####### PREDICT RESULTS, GENERATE COUNTS, SAVE IN DATABASE,  AND RUN APPLICATION ###########
             #================# PREDICT GIVEN IMAGES  AND RUN THE LOAD BAR#================#
             print("Running WBC Differential...")
+            #from scripts import wait_animate
+            #waitapp, run = wait_animate.runit(self.app)
+            #waitapp.show()
+            #print("line1")
             from scripts.classify import classifier
-            patientWBCimages1 = classifier(specinfo, test_imgs, self.app)
+            #print("line2")
+            patientWBCimages1 = classifier(specinfo, test_imgs)
             specimen_info, specimen_fig, specimen_prediction  = patientWBCimages1.predict_images(numpred)
+            #print("line3")
+            #waitapp.close()
             #================# END OF PREDICT RESULTS  #================#
 
 

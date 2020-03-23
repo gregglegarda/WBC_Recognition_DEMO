@@ -89,6 +89,7 @@ class login(QDialog):
         if (self.line_edit_username.text() == self.username_info) and (self.line_edit_password.text() == self.password_info):
             user_type = str(self.combo_label_person.currentText())
             result = True
+            self.success = True
             msg.setText('Success')
             msg.exec_()
             #self.app.quit()
@@ -106,7 +107,7 @@ class login(QDialog):
 
 
     def successlogin(self):
-        if (self.line_edit_username.text() == self.username_info) and (self.line_edit_password.text() == self.password_info):
+        if (self.line_edit_username.text() == self.username_info) and (self.line_edit_password.text() == self.password_info) and (self.success==True):
             user_type = str(self.combo_label_person.currentText())
             result = True
             self.app.quit()

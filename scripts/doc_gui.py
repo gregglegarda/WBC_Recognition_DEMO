@@ -144,6 +144,7 @@ class doctor_gui(QMainWindow):
         self.tableView.setColumnWidth(10, 60) # Reviewed
 
         self.tableView.horizontalHeader().setStretchLastSection(True)
+        self.tableView.setSortingEnabled(True)
         self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         #layout1.addRow(self.tableView)
