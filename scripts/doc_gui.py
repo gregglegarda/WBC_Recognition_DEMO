@@ -28,6 +28,7 @@ import ntpath
 
 
 import numpy as np
+import re
 
 def runit(app):
 
@@ -91,25 +92,42 @@ class doctor_gui(QMainWindow):
 
         # ==================+++++++++++++++++++++++++# FIRST SECTION #+++++++++++++++++++++++++==================#
         #==================# BUTTONS #==================#
+        # ALL DIFFERENTIALS BUTTON
+        pushButtonAllDiffs = QtWidgets.QPushButton(self.widget)
+        pushButtonAllDiffs.setText("All Differentials")
+        pushButtonAllDiffs.clicked.connect(self.on_pushButtonLoad_clicked)
+        layout1.addWidget(pushButtonAllDiffs, 0, 0, 1, 1)
+
         #TO BE REVIEWED BUTTON
         pushButtonUnreviewed = QtWidgets.QPushButton(self.widget)
         pushButtonUnreviewed.setText("In Progress")
-        pushButtonUnreviewed.clicked.connect(self.on_pushButtonLoad_clicked)
-        layout1.addWidget(pushButtonUnreviewed, 0, 0, 1, 1)
+        pushButtonUnreviewed.clicked.connect(self.on_pushButtonLoad_clicked2)
+        layout1.addWidget(pushButtonUnreviewed, 0, 1, 1, 1)
         # REVIEWED BUTTON
         pushButtonReviewed = QtWidgets.QPushButton(self.widget)
         pushButtonReviewed.setText("Reviewed")
-        pushButtonReviewed.clicked.connect(self.on_pushButtonLoad_clicked)
-        layout1.addWidget(pushButtonReviewed, 0, 1, 1, 1)
+        pushButtonReviewed.clicked.connect(self.on_pushButtonLoad_clicked3)
+        layout1.addWidget(pushButtonReviewed, 0, 2, 1, 1)
         #==================# END OF BUTTONS #==================#
 
         #==================# TABLE DATABASE #==================#
-        filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_abnormal.csv")
+        filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
         self.items = []
         self.fileName = filename
         self.on_pushButtonLoad_clicked
+
+        filename2 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_abnormal.csv")
+        self.items2 = []
+        self.fileName2 = filename2
+        self.on_pushButtonLoad_clicked2
+
+        filename3 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_reviewed.csv")
+        self.items3 = []
+        self.fileName3 = filename3
+        self.on_pushButtonLoad_clicked3
+
         self.model = QtGui.QStandardItemModel(self.widget)
-        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %'])
+        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %', 'Notes'])
 
         self.tableView = QTableView(self.widget)
         self.tableView.setModel(self.model)
@@ -123,12 +141,13 @@ class doctor_gui(QMainWindow):
         self.tableView.setColumnWidth(7, 60)# L
         self.tableView.setColumnWidth(8, 60)# M
         self.tableView.setColumnWidth(9, 60) # N
+        self.tableView.setColumnWidth(10, 60) # Reviewed
 
         self.tableView.horizontalHeader().setStretchLastSection(True)
         self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         #layout1.addRow(self.tableView)
-        layout1.addWidget(self.tableView, 1, 0, 1, 2)
+        layout1.addWidget(self.tableView, 1, 0, 1, 3)
         # ==================# END OF TABLE DATABASE #==================#
 
 
@@ -166,11 +185,12 @@ class doctor_gui(QMainWindow):
         # COMMENT BOX
         self.comment_text_edit = QPlainTextEdit()
         self.comment_text_edit.setPlaceholderText('Enter Pathologist Comments')
-        #self.comment_text_edit.mousePressEvent = lambda _: self.comment_text_edit.selectAll()
+        self.comment_text_edit.mousePressEvent = lambda _: self.comment_text_edit.selectAll()
         layout3.addWidget(self.comment_text_edit, 0, 0, 1, 1)
 
         # PATHOLOGIST REVIEW BUTTON
-        button_path_review = QPushButton('Finalize Review')
+        button_path_review = QPushButton('Submit Review')
+        button_path_review.clicked.connect(self.button_path_review_clicked)
         layout3.addWidget(button_path_review, 1, 0, 1, 1)
 
 
@@ -190,13 +210,54 @@ class doctor_gui(QMainWindow):
 
 
 
-    ######################   FUNCTIONS    ############################
-
-
-    #===============# FIND IMAGE BUTTON  AND VIEW#===============#
+    ############################################   FUNCTIONS    ##################################################
 
 
 
+
+    # ==============================# SUBMIT REVIEW FUNCTION#==============================#
+    @QtCore.pyqtSlot()
+    def button_path_review_clicked(self):
+        self.loadEntry(self.fileName2,self.fileName3)
+    def loadEntry(self, fileName2,fileName3):
+        # save results to csv files
+        try:  # try this first if there is a file. if none, go to except
+
+            lines =list()
+            with open(fileName3, 'a') as f3:  # output csv file
+                writer3 = csv.writer(f3)
+                with open(fileName2, 'r') as myfile:  # input csv file
+                    reader = csv.reader(myfile, delimiter=',')
+                    for entry in reader:
+                        editline = self.line_edit_viewImage.text()
+                        print(reader)
+                        print("0", entry)
+                        print("1", entry[0])
+                        print("2", editline)
+                        #move to the reviewed database
+                        if entry[0] == editline:
+                            row = entry
+                            row.append(str(self.comment_text_edit.toPlainText()))
+                            writer3.writerow(row)
+                        ### if the entry is not the editline, remove from the database since it was moved to the reviewed database
+                        else:
+                            lines.append(entry)
+
+                    with open(fileName2, 'w') as writeFile:
+                        writer2 = csv.writer(writeFile)
+                        writer2.writerows(lines)
+
+
+        except IOError:
+            print("No entry to review")
+
+
+
+
+
+
+
+    # ==============================# FIND IMAGE BUTTON  AND VIEW FUNCTION#==============================#
     @QtCore.pyqtSlot()
     def button_find_image_clicked(self):
         # directory
@@ -224,19 +285,11 @@ class doctor_gui(QMainWindow):
         head, tail = ntpath.split(path)
         return tail or ntpath.basename(head)
 
-
-
-
-
-
-
-
-
-
+    # ==============================# VIEW  DATABASES FUNCTION#==============================#
+    # ==============# FUNCTION (ALL DIFFS)#==============#
     @QtCore.pyqtSlot()
     def on_pushButtonLoad_clicked(self):
         self.loadCsv(self.fileName)
-
     def loadCsv(self, fileName):
         while (self.model.rowCount() > 0):
             self.model.removeRow(0)
@@ -249,8 +302,45 @@ class doctor_gui(QMainWindow):
                     ]
                     self.model.appendRow(self.items)
         except:
-            print("No Database")
+            print("No All Differentials Database")
 
+    # ==============# FUNCTION (IN PROGRESS)#==============#
+    @QtCore.pyqtSlot()
+    def on_pushButtonLoad_clicked2(self):
+        self.loadCsv2(self.fileName2)
+    def loadCsv2(self, fileName):
+        while (self.model.rowCount() > 0):
+            self.model.removeRow(0)
+        try:
+            with open(fileName, "r") as fileInput:
+                for row in csv.reader(fileInput):
+                    self.items2 = [
+                        QtGui.QStandardItem(field)
+                        for field in row
+                    ]
+                    self.model.appendRow(self.items2)
+        except:
+            print("No In Progress Database")
+
+    # ==============# FUNCTION (REVIEWED)#==============#
+    @QtCore.pyqtSlot()
+    def on_pushButtonLoad_clicked3(self):
+        self.loadCsv3(self.fileName3)
+    def loadCsv3(self, fileName):
+        while (self.model.rowCount() > 0):
+            self.model.removeRow(0)
+        try:
+            with open(fileName, "r") as fileInput:
+                for row in csv.reader(fileInput):
+                    self.items3 = [
+                        QtGui.QStandardItem(field)
+                        for field in row
+                    ]
+                    self.model.appendRow(self.items3)
+        except:
+            print("No Reviewed Database")
+
+    # ==============================# LOGOUT FUNCTION#==============================#
     def logout_success(self):
         msg = QMessageBox()
         msg.setText('Logged out successful')
@@ -258,6 +348,3 @@ class doctor_gui(QMainWindow):
         ## go to login screen
         self.close()
 
-    @QtCore.pyqtSlot()
-    def button_run_new_clicked(self):
-        self.run_specimen()
