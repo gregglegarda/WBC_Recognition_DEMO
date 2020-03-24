@@ -107,9 +107,10 @@ class data_entry(QDialog):
             self.success = False
     def getinfo(self):
 
-        uniqueid = datetime.now().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
+        #uniqueid = datetime.now().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
+        uniqueid = str(uuid4())
         accession = uniqueid
-        delta = np.timedelta64(5, 'h')  # EST(eastern) is -5 of UCT(universal)
+        delta = np.timedelta64(4, 'h')  # EST(eastern) is 5 of UCT(universal) during the winter time and 4 during the summer
         todays_datetime = np.datetime64('now') - delta  # timestamp right now
 
         return accession, todays_datetime, self.line_edit_firstname.text(), self.line_edit_lastname.text(), self.line_edit_dob.text(), self.line_edit_ssn.text(), self.success

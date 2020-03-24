@@ -2,7 +2,7 @@
 """
 This script is the whole gui QMainWindow of the Doctor Terminal.
 It includes :
-    The abnormal database (to be reviewed)
+    The out of range database (to be reviewed)
     Reviewed database (commented by the pathologist)
     View Images
     Comment section
@@ -21,6 +21,7 @@ from PyQt5.QtGui import QPixmap
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import csv
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QItemSelectionModel
 import sys
 import os
 import ntpath
@@ -53,8 +54,8 @@ class doctor_gui(QMainWindow):
         self.widget = QtWidgets.QWidget()
         self.setCentralWidget(self.widget)
         self.widget.setLayout(QtWidgets.QGridLayout())
-        self.widget.layout().setContentsMargins(40, 40, 40, 40)
-        self.widget.layout().setSpacing(10)
+        self.widget.layout().setContentsMargins(20, 20, 20, 20)
+        self.widget.layout().setSpacing(5)
         self.setWindowTitle("Pathologist Terminal")
         #self.widget.layout().setColumnMinimumWidth(0, 10)
         #self.widget.layout().setColumnMinimumWidth(1, 10)
@@ -70,6 +71,7 @@ class doctor_gui(QMainWindow):
         self.GroupBox1 = QGroupBox()
         layout1 = QGridLayout()
         self.GroupBox1.setLayout(layout1)
+        layout1.setContentsMargins(5, 5, 5, 5)
         layout1.setSpacing(5)
         self.widget.layout().addWidget(self.GroupBox1, 0, 0,1,3)
 
@@ -78,13 +80,32 @@ class doctor_gui(QMainWindow):
         self.GroupBox2 = QGroupBox()
         layout2 = QGridLayout()
         self.GroupBox2.setLayout(layout2)
+        layout2.setContentsMargins(5, 5, 5, 5)
         layout2.setSpacing(5)
         self.widget.layout().addWidget(self.GroupBox2, 1, 0,1,3)
+
+        # Small group2a (in group box 2)
+        self.GroupBox2a = QGroupBox()
+        layout2a = QGridLayout()
+        self.GroupBox2a.setLayout(layout2a)
+        layout2a.setSpacing(5)
+        layout2.addWidget(self.GroupBox2a, 2, 0, 1, 2)
+        self.GroupBox2a.setStyleSheet("QGroupBox {background-color: white}")
+
+        # Small group2b (in group box 2)
+        self.GroupBox2b = QGroupBox()
+        layout2b = QGridLayout()
+        self.GroupBox2b.setLayout(layout2b)
+        layout2b.setSpacing(5)
+        layout2.addWidget(self.GroupBox2b, 2, 2, 1, 1)
+        self.GroupBox2b.setStyleSheet("QGroupBox {background-image: url(background/image.png)}")
+
 
         # Small group3
         self.GroupBox3 = QGroupBox()
         layout3 = QGridLayout()
         self.GroupBox3.setLayout(layout3)
+        layout3.setContentsMargins(5, 5, 5, 5)
         layout3.setSpacing(5)
         self.widget.layout().addWidget(self.GroupBox3, 2, 0, 1, 3)
 
@@ -92,22 +113,28 @@ class doctor_gui(QMainWindow):
 
         # ==================+++++++++++++++++++++++++# FIRST SECTION #+++++++++++++++++++++++++==================#
         #==================# BUTTONS #==================#
-        # ALL DIFFERENTIALS BUTTON
-        pushButtonAllDiffs = QtWidgets.QPushButton(self.widget)
-        pushButtonAllDiffs.setText("All Differentials")
-        pushButtonAllDiffs.clicked.connect(self.on_pushButtonLoad_clicked)
-        layout1.addWidget(pushButtonAllDiffs, 0, 0, 1, 1)
+        # TRUE NORMAL BUTTON
+        pushButtonNormalDiffs = QtWidgets.QPushButton(self.widget)
+        pushButtonNormalDiffs.setText("True Normal")
+        pushButtonNormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked)
+        layout1.addWidget(pushButtonNormalDiffs, 0, 0, 1, 1)
+
+        # TRUE ABNORMAL BUTTON
+        pushButtonAbormalDiffs = QtWidgets.QPushButton(self.widget)
+        pushButtonAbormalDiffs.setText("True Abnormal")
+        pushButtonAbormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked)
+        layout1.addWidget(pushButtonAbormalDiffs, 0, 1, 1, 1)
 
         #TO BE REVIEWED BUTTON
         pushButtonUnreviewed = QtWidgets.QPushButton(self.widget)
         pushButtonUnreviewed.setText("In Progress")
         pushButtonUnreviewed.clicked.connect(self.on_pushButtonLoad_clicked2)
-        layout1.addWidget(pushButtonUnreviewed, 0, 1, 1, 1)
+        layout1.addWidget(pushButtonUnreviewed, 0, 2, 1, 1)
         # REVIEWED BUTTON
         pushButtonReviewed = QtWidgets.QPushButton(self.widget)
         pushButtonReviewed.setText("Reviewed")
         pushButtonReviewed.clicked.connect(self.on_pushButtonLoad_clicked3)
-        layout1.addWidget(pushButtonReviewed, 0, 2, 1, 1)
+        layout1.addWidget(pushButtonReviewed, 0, 3, 1, 1)
         #==================# END OF BUTTONS #==================#
 
         #==================# TABLE DATABASE #==================#
@@ -116,7 +143,7 @@ class doctor_gui(QMainWindow):
         self.fileName = filename
         self.on_pushButtonLoad_clicked
 
-        filename2 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_abnormal.csv")
+        filename2 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_outofrange.csv")
         self.items2 = []
         self.fileName2 = filename2
         self.on_pushButtonLoad_clicked2
@@ -127,33 +154,37 @@ class doctor_gui(QMainWindow):
         self.on_pushButtonLoad_clicked3
 
         self.model = QtGui.QStandardItemModel(self.widget)
-        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %', 'Notes'])
+        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %', 'Status', 'Comments'])
 
         self.tableView = QTableView(self.widget)
         self.tableView.setModel(self.model)
-        self.tableView.setColumnWidth(0, 430)#id
-        self.tableView.setColumnWidth(1, 160)#date
-        self.tableView.setColumnWidth(2, 140)#first
-        self.tableView.setColumnWidth(3, 140)#last
-        self.tableView.setColumnWidth(4, 100)# DOB
-        self.tableView.setColumnWidth(5, 110)# SSN
-        self.tableView.setColumnWidth(6, 60)# E
-        self.tableView.setColumnWidth(7, 60)# L
-        self.tableView.setColumnWidth(8, 60)# M
-        self.tableView.setColumnWidth(9, 60) # N
-        self.tableView.setColumnWidth(10, 60) # Reviewed
+        self.tableView.setColumnWidth(0, 370)  # id
+        self.tableView.setColumnWidth(1, 170)  # date
+        self.tableView.setColumnWidth(2, 170)  # first
+        self.tableView.setColumnWidth(3, 170)  # last
+        self.tableView.setColumnWidth(4, 155)  # DOB
+        self.tableView.setColumnWidth(5, 155)  # SSN
+        self.tableView.setColumnWidth(6, 60)  # E
+        self.tableView.setColumnWidth(7, 60)  # L
+        self.tableView.setColumnWidth(8, 60)  # M
+        self.tableView.setColumnWidth(9, 60)  # N
+        self.tableView.setColumnWidth(10, 170) # Status
+        self.tableView.setColumnWidth(11, 170)  # Comments
 
         self.tableView.horizontalHeader().setStretchLastSection(True)
         self.tableView.setSortingEnabled(True)
         self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        #layout1.addRow(self.tableView)
-        layout1.addWidget(self.tableView, 1, 0, 1, 3)
+        self.tableView.setColumnHidden(6, True);
+        self.tableView.setColumnHidden(7, True);
+        self.tableView.setColumnHidden(8, True);
+        self.tableView.setColumnHidden(9, True);
+        layout1.addWidget(self.tableView, 1, 0, 1, 4)
         # ==================# END OF TABLE DATABASE #==================#
 
 
         # ==================+++++++++++++++++++++++++# SECOND SECTION #+++++++++++++++++++++++++==================#
-        # ==================# VIEW IMAGE DATABASE #==================#
+        # ==================# VIEW SPECIMEN DATABASE #==================#
 
         #Qlineedit
         self.line_edit_viewImage = QLineEdit()
@@ -163,7 +194,7 @@ class doctor_gui(QMainWindow):
 
         #view button
         viewImage_button = QPushButton('View Differential')
-        viewImage_button.clicked.connect(self.button_find_image_clicked)
+        viewImage_button.clicked.connect(self.button_find_specimen_clicked)
         #layout2.addRow(self.line_edit_viewImage, viewImage_button)
         layout2.addWidget(viewImage_button, 0, 2, 1, 1)
 
@@ -179,9 +210,37 @@ class doctor_gui(QMainWindow):
 
         # ==================# END VIEW IMAGE DATABASE #==================#
 
+        # ==================# SPECIMEN INFO BOX #==================#
+        self.specimen_info_label = QLabel()
+        self.specimen_info_label.setAlignment(QtCore.Qt.AlignTop)
+        self.specimen_info_label.setText(
+            '\t'
+            '\n\t'
+            '\n\t'
+            '\n\t'
+            '\n\t'
+            '\n\t')
+        layout2a.addWidget(self.specimen_info_label, 0, 0, 1, 2)
+
+        # ==================# END OF SPECIMEN INFO BOX #==================#
+
+        # ==================# WBC RESULTS BOX #==================#
+        self.specimen_results_label = QLabel()
+        self.specimen_results_label.setAlignment(QtCore.Qt.AlignTop)
+        self.specimen_results_label.setText(
+            '\t'
+            '\n\t'
+            '\n\t'
+            '\n\t'
+            '\n\t'
+            '\n\t')
+        layout2b.addWidget(self.specimen_results_label, 0, 0, 1, 2)
+        # ==================# END OF WBC RESULTS BOX #==================#
+
+
+
         # ==================+++++++++++++++++++++++++# THIRD SECTION #+++++++++++++++++++++++++==================#
         # ==================# BUTTONS #==================#
-
 
         # COMMENT BOX
         self.comment_text_edit = QPlainTextEdit()
@@ -193,8 +252,6 @@ class doctor_gui(QMainWindow):
         button_path_review = QPushButton('Submit Review')
         button_path_review.clicked.connect(self.button_path_review_clicked)
         layout3.addWidget(button_path_review, 1, 0, 1, 1)
-
-
 
         # ==================# END OF BUTTONS #==================#
 
@@ -260,7 +317,7 @@ class doctor_gui(QMainWindow):
 
     # ==============================# FIND IMAGE BUTTON  AND VIEW FUNCTION#==============================#
     @QtCore.pyqtSlot()
-    def button_find_image_clicked(self):
+    def button_find_specimen_clicked(self):
         # directory
         self.imageFolder = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/")
         self.classifiedImageList = [os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/{}").format(i) for
@@ -281,6 +338,28 @@ class doctor_gui(QMainWindow):
                 print("image is:",image)
                 print("editline is:", editline)
 
+        # show the specimen info and results
+        try:
+            aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk = self.readCsvForSpecInfo(self.fileName, editline)
+            # show speciment info
+            self.specimen_info_label.setText(
+                '\tAccession ID\t\t\t{aa}'
+                '\n\tAccession Date/Time\t\t{bb}'
+                '\n\tPatient First Name\t\t{cc}'
+                '\n\tPatient Last Name\t\t{dd}'
+                '\n\tDate of Birth\t\t\t{ee}'
+                '\n\tSocial Security Number\t\t{ff}'
+                    .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, ))
+            # show results
+            self.specimen_results_label.setText(
+                '\tEosinophil %\t\t{gg}'
+                '\n\tLymphocyte %\t\t{hh}'
+                '\n\tMonocyte %\t\t{ii}'
+                '\n\tNeutrophil %\t\t{jj}'
+                '\n\tStatus\t\t\t{kk}'
+                    .format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk))
+        except:
+            print("Edit Line Empty")
 
     def path_leaf(self, path):
         head, tail = ntpath.split(path)
@@ -340,6 +419,33 @@ class doctor_gui(QMainWindow):
                     self.model.appendRow(self.items3)
         except:
             print("No Reviewed Database")
+
+    # ==============================# READ CSV FOR DISPLAY FUNCTION#==============================#
+    def readCsvForSpecInfo(self, fileName, editline):
+        try:
+            with open(fileName, "r") as fileInput:
+                for entry in csv.reader(fileInput):
+                    print(entry[0])
+                    print(editline)
+                    if (entry[0]+".png") == editline:
+                        aa = entry[0] #accID
+                        bb = entry[1] #accDate
+                        cc = entry[2] #FN
+                        dd = entry[3] #LN
+                        ee = entry[4] #DOB
+                        ff = entry[5] #SSN
+                        gg = entry[6] #E
+                        hh = entry[7] #L
+                        ii = entry[8] #M
+                        jj = entry[9] #N
+                        kk = entry[10] #Normality
+
+            return aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk
+        except:
+            print("Reading Specimen Info Failed")
+
+
+
 
     # ==============================# LOGOUT FUNCTION#==============================#
     def logout_success(self):

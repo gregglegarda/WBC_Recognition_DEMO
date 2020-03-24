@@ -14,7 +14,7 @@ class specimen_differential():
         self.nflag = 0
         self.totalflag = 0
 
-        self.normality = ''
+        self.normality = 'NORMAL'
     def generate_results(self, predicted_labels):
 
         # normal ranges of wbc
@@ -40,30 +40,30 @@ class specimen_differential():
 
 
 
-        # normal or abnormal
+        # normal or out of range
         if float(self.n) > np_ref_range_H or float(self.n) < np_ref_range_L:
             if float(self.n) > np_ref_range_H:
-                self.normality = 'F'
+                self.normality = 'OUT OF RANGE'
             else:
-                self.normality = 'F'
+                self.normality = 'OUT OF RANGE'
 
         if float(self.l) > lp_ref_range_H or float(self.l) < lp_ref_range_L:
             if float(self.l) > lp_ref_range_H:
-                self.normality = 'F'
+                self.normality = 'OUT OF RANGE'
             else:
-                self.normality = 'F'
+                self.normality = 'OUT OF RANGE'
 
         if float(self.m) > mp_ref_range_H or float(self.m) < mp_ref_range_L:
             if float(self.m) > mp_ref_range_H:
-                self.normality = 'F'
+                self.normality = 'OUT OF RANGE'
             else:
-                self.normality = 'F'
+                self.normality = 'OUT OF RANGE'
 
         if float(self.e) > ep_ref_range_H or float(self.e) < ep_ref_range_L:
             if float(self.e) > ep_ref_range_H:
-                self.normality = 'F'
+                self.normality = 'OUT OF RANGE'
             else:
-                self.normality = 'F'
+                self.normality = 'OUT OF RANGE'
 
 
 
@@ -71,6 +71,6 @@ class specimen_differential():
         print("\n------------","\nWBC COUNT:","\n------------", "\nEosinophils:", self.e ,"\nLymphocytes:", self.l ,"\nMonocytes:", self.m,"\nNeutrophils:", self.n)
         print("\n------------","\nWBC PERCENT %:","\n------------","\nEosinophils:", self.e/self.total*100 ,"%\nLymphocytes:", self.l/self.total*100 ,"%\nMonocytes:", self.m/self.total*100,"%\nNeutrophils:", self.n/self.total*100, "%")
 
-        return [self.e, self.l, self.m, self.n], self.normality
+        return [self.e, self.l, self.m, self.n, self.normality], self.normality
 
 #END OF SPECIMEN DIFFERENTIAL CLASS
