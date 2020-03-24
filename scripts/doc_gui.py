@@ -82,32 +82,39 @@ class doctor_gui(QMainWindow):
         self.GroupBox2.setLayout(layout2)
         layout2.setContentsMargins(5, 5, 5, 5)
         layout2.setSpacing(5)
+        layout2.setColumnStretch(0, 2)
+        layout2.setColumnStretch(2,1)
+        layout2.setColumnStretch(3, 1)
+        layout2.setRowStretch(1, 4)
+        layout2.setRowStretch(2, 1)
         self.widget.layout().addWidget(self.GroupBox2, 1, 0,1,3)
 
         # Small group2a (in group box 2)
         self.GroupBox2a = QGroupBox()
         layout2a = QGridLayout()
         self.GroupBox2a.setLayout(layout2a)
+        layout2a.setContentsMargins(60, 10, 10, 10)
         layout2a.setSpacing(5)
-        layout2.addWidget(self.GroupBox2a, 2, 0, 1, 2)
+        layout2.addWidget(self.GroupBox2a, 2, 0, 2, 2)
         self.GroupBox2a.setStyleSheet("QGroupBox {background-color: white}")
 
         # Small group2b (in group box 2)
         self.GroupBox2b = QGroupBox()
         layout2b = QGridLayout()
         self.GroupBox2b.setLayout(layout2b)
+        layout2b.setContentsMargins(60, 10, 10, 10)
         layout2b.setSpacing(5)
-        layout2.addWidget(self.GroupBox2b, 2, 2, 1, 1)
+        layout2.addWidget(self.GroupBox2b, 2, 2, 2, 1)
         self.GroupBox2b.setStyleSheet("QGroupBox {background-image: url(background/image.png)}")
 
 
         # Small group3
-        self.GroupBox3 = QGroupBox()
-        layout3 = QGridLayout()
-        self.GroupBox3.setLayout(layout3)
-        layout3.setContentsMargins(5, 5, 5, 5)
-        layout3.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox3, 2, 0, 1, 3)
+        #self.GroupBox3 = QGroupBox()
+        #layout3 = QGridLayout()
+        #self.GroupBox3.setLayout(layout3)
+        #layout3.setContentsMargins(5, 5, 5, 5)
+        #layout3.setSpacing(5)
+        #self.widget.layout().addWidget(self.GroupBox3, 2, 0, 1, 3)
 
         # ==================# END OF MAIN WIDGET LAYOUT #==================#
 
@@ -190,13 +197,13 @@ class doctor_gui(QMainWindow):
         self.line_edit_viewImage = QLineEdit()
         self.line_edit_viewImage.setPlaceholderText('Enter Accession ID')
         self.line_edit_viewImage.mousePressEvent = lambda _: self.line_edit_viewImage.selectAll()
-        layout2.addWidget(self.line_edit_viewImage, 0, 0, 1, 2)
+        layout2.addWidget(self.line_edit_viewImage, 0, 0, 1, 3)
 
         #view button
         viewImage_button = QPushButton('View Differential')
         viewImage_button.clicked.connect(self.button_find_specimen_clicked)
         #layout2.addRow(self.line_edit_viewImage, viewImage_button)
-        layout2.addWidget(viewImage_button, 0, 2, 1, 1)
+        layout2.addWidget(viewImage_button, 0, 3, 1, 1)
 
         #image box
         self.imageView = QLabel(self.widget)
@@ -206,7 +213,7 @@ class doctor_gui(QMainWindow):
         self.scroll = QtWidgets.QScrollArea(self.widget)
         self.scroll.setWidget(self.imageView)
         #layout2.addRow(self.scroll)
-        layout2.addWidget(self.scroll, 1, 0, 1, 3)
+        layout2.addWidget(self.scroll, 1, 0, 1, 4)
 
         # ==================# END VIEW IMAGE DATABASE #==================#
 
@@ -238,28 +245,22 @@ class doctor_gui(QMainWindow):
         # ==================# END OF WBC RESULTS BOX #==================#
 
 
-
-        # ==================+++++++++++++++++++++++++# THIRD SECTION #+++++++++++++++++++++++++==================#
-        # ==================# BUTTONS #==================#
+        # ==================# COMMENTX #==================#
 
         # COMMENT BOX
         self.comment_text_edit = QPlainTextEdit()
         self.comment_text_edit.setPlaceholderText('Enter Pathologist Comments')
         self.comment_text_edit.mousePressEvent = lambda _: self.comment_text_edit.selectAll()
-        layout3.addWidget(self.comment_text_edit, 0, 0, 1, 1)
+        layout2.addWidget(self.comment_text_edit, 2, 3, 1, 1)
 
         # PATHOLOGIST REVIEW BUTTON
         button_path_review = QPushButton('Submit Review')
         button_path_review.clicked.connect(self.button_path_review_clicked)
-        layout3.addWidget(button_path_review, 1, 0, 1, 1)
+        layout2.addWidget(button_path_review, 3, 3, 1, 1)
 
-        # ==================# END OF BUTTONS #==================#
+        # ==================# END OF COMMENTS #==================#
 
-
-
-
-
-
+        # ==================+++++++++++++++++++++++++# THIRD SECTION #+++++++++++++++++++++++++==================#
         ##LOGOUT BUTTON
         button_logout = QPushButton('Logout')
         button_logout.clicked.connect(self.logout_success)
@@ -343,20 +344,21 @@ class doctor_gui(QMainWindow):
             aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk = self.readCsvForSpecInfo(self.fileName, editline)
             # show speciment info
             self.specimen_info_label.setText(
-                '\tAccession ID\t\t\t{aa}'
-                '\n\tAccession Date/Time\t\t{bb}'
-                '\n\tPatient First Name\t\t{cc}'
-                '\n\tPatient Last Name\t\t{dd}'
-                '\n\tDate of Birth\t\t\t{ee}'
-                '\n\tSocial Security Number\t\t{ff}'
+                'Accession ID\t\t\t{aa}'
+                '\nAccession Date/Time\t\t{bb}'
+                '\nPatient First Name\t\t{cc}'
+                '\nPatient Last Name\t\t{dd}'
+                '\nDate of Birth\t\t\t{ee}'
+                '\nSocial Security Number\t\t{ff}'
                     .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, ))
             # show results
             self.specimen_results_label.setText(
-                '\tEosinophil %\t\t{gg}'
-                '\n\tLymphocyte %\t\t{hh}'
-                '\n\tMonocyte %\t\t{ii}'
-                '\n\tNeutrophil %\t\t{jj}'
-                '\n\tStatus\t\t\t{kk}'
+                'Eosinophil %\t\t{gg}'
+                '\nLymphocyte %\t\t{hh}'
+                '\nMonocyte %\t\t{ii}'
+                '\nNeutrophil %\t\t{jj}'
+                '\n\t'
+                '\nSTATUS\t\t{kk}'
                     .format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk))
         except:
             print("Edit Line Empty")

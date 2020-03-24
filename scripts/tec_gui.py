@@ -84,6 +84,7 @@ class technician_gui(QMainWindow):
         self.GroupBox3 = QGroupBox()
         layout3 = QGridLayout()
         self.GroupBox3.setLayout(layout3)
+        layout3.setContentsMargins(60, 10, 10, 10)
         layout3.setSpacing(5)
         layout2.addWidget(self.GroupBox3, 2, 0, 1, 2)
         self.GroupBox3.setStyleSheet("QGroupBox {background-image: url(background/image.png)}")
@@ -92,6 +93,7 @@ class technician_gui(QMainWindow):
         self.GroupBox4 = QGroupBox()
         layout4 = QGridLayout()
         self.GroupBox4.setLayout(layout4)
+        layout4.setContentsMargins(60, 10, 10, 10)
         layout4.setSpacing(5)
         layout2.addWidget(self.GroupBox4, 2, 2, 1, 1)
         self.GroupBox4.setStyleSheet("QGroupBox {background-image: url(background/image.png)}")
@@ -246,20 +248,21 @@ class technician_gui(QMainWindow):
             aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk = self.readCsvForSpecInfo(self.fileName, editline)
             #show speciment info
             self.specimen_info_label.setText(
-                '\tAccession ID\t\t\t{aa}'
-                '\n\tAccession Date/Time\t\t{bb}'
-                '\n\tPatient First Name\t\t{cc}'
-                '\n\tPatient Last Name\t\t{dd}'
-                '\n\tDate of Birth\t\t\t{ee}'
-                '\n\tSocial Security Number\t\t{ff}'
+                'Accession ID\t\t\t{aa}'
+                '\nAccession Date/Time\t\t{bb}'
+                '\nPatient First Name\t\t{cc}'
+                '\nPatient Last Name\t\t{dd}'
+                '\nDate of Birth\t\t\t{ee}'
+                '\nSocial Security Number\t\t{ff}'
                     .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, ))
             #show results
             self.specimen_results_label.setText(
-                '\tEosinophil %\t\t{gg}'
-                '\n\tLymphocyte %\t\t{hh}'
-                '\n\tMonocyte %\t\t{ii}'
-                '\n\tNeutrophil %\t\t{jj}'
-                '\n\tStatus\t\t\t{kk}'
+                'Eosinophil %\t\t{gg}'
+                '\nLymphocyte %\t\t{hh}'
+                '\nMonocyte %\t\t{ii}'
+                '\nNeutrophil %\t\t{jj}'
+                '\n'
+                '\nSTATUS\t\t\t{kk}'
                     .format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk))
         except:
             print("Edit Line Empty")
