@@ -56,7 +56,7 @@ class doctor_gui(QMainWindow):
         self.widget.setLayout(QtWidgets.QGridLayout())
         self.widget.layout().setContentsMargins(20, 20, 20, 20)
         self.widget.layout().setSpacing(5)
-        self.setWindowTitle("Pathologist Terminal")
+        self.setWindowTitle("Doctor Terminal")
         #self.widget.layout().setColumnMinimumWidth(0, 10)
         #self.widget.layout().setColumnMinimumWidth(1, 10)
         #self.widget.layout().setRowMinimumHeight(0, 10)
@@ -121,39 +121,40 @@ class doctor_gui(QMainWindow):
         # ==================+++++++++++++++++++++++++# FIRST SECTION #+++++++++++++++++++++++++==================#
         #==================# BUTTONS #==================#
         # TRUE NORMAL BUTTON
-        pushButtonNormalDiffs = QtWidgets.QPushButton(self.widget)
-        pushButtonNormalDiffs.setText("True Normal")
-        pushButtonNormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked)
-        layout1.addWidget(pushButtonNormalDiffs, 0, 0, 1, 1)
+        #pushButtonNormalDiffs = QtWidgets.QPushButton(self.widget)
+        #pushButtonNormalDiffs.setText("True Normal")
+        #pushButtonNormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked)
+        #layout1.addWidget(pushButtonNormalDiffs, 0, 0, 1, 1)
 
         # TRUE ABNORMAL BUTTON
-        pushButtonAbormalDiffs = QtWidgets.QPushButton(self.widget)
-        pushButtonAbormalDiffs.setText("True Abnormal")
-        pushButtonAbormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked)
-        layout1.addWidget(pushButtonAbormalDiffs, 0, 1, 1, 1)
+        #pushButtonAbormalDiffs = QtWidgets.QPushButton(self.widget)
+        #pushButtonAbormalDiffs.setText("True Abnormal")
+        #pushButtonAbormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked)
+        #layout1.addWidget(pushButtonAbormalDiffs, 0, 1, 1, 1)
 
         #TO BE REVIEWED BUTTON
         pushButtonUnreviewed = QtWidgets.QPushButton(self.widget)
         pushButtonUnreviewed.setText("In Progress")
         pushButtonUnreviewed.clicked.connect(self.on_pushButtonLoad_clicked2)
-        layout1.addWidget(pushButtonUnreviewed, 0, 2, 1, 1)
+        layout1.addWidget(pushButtonUnreviewed, 0, 0, 1, 1)
+
         # REVIEWED BUTTON
         pushButtonReviewed = QtWidgets.QPushButton(self.widget)
         pushButtonReviewed.setText("Reviewed")
         pushButtonReviewed.clicked.connect(self.on_pushButtonLoad_clicked3)
-        layout1.addWidget(pushButtonReviewed, 0, 3, 1, 1)
+        layout1.addWidget(pushButtonReviewed, 0, 1, 1, 1)
         #==================# END OF BUTTONS #==================#
 
         #==================# TABLE DATABASE #==================#
-        filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
-        self.items = []
-        self.fileName = filename
-        self.on_pushButtonLoad_clicked
+        #filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
+        #self.items = []
+        #self.fileName = filename
+        #self.on_pushButtonLoad_clicked
 
         filename2 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_outofrange.csv")
-        self.items2 = []
-        self.fileName2 = filename2
-        self.on_pushButtonLoad_clicked2
+        #self.items2 = []
+        #self.fileName2 = filename2
+        #self.on_pushButtonLoad_clicked2
 
         filename3 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_reviewed.csv")
         self.items3 = []

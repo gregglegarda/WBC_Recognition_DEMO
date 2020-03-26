@@ -110,7 +110,7 @@ class technician_gui(QMainWindow):
         layout1.addWidget(button_run_new, 0, 0, 1, 1)
         # UPDATE DATABASE BUTTON
         pushButtonLoad = QtWidgets.QPushButton(self.widget)
-        pushButtonLoad.setText("Update Database")
+        pushButtonLoad.setText("View All Runs")
         pushButtonLoad.clicked.connect(self.on_pushButtonLoad_clicked)
         #layout1.addRow(button_run_new, pushButtonLoad)
         layout1.addWidget(pushButtonLoad, 0, 1, 1, 1)
@@ -123,7 +123,7 @@ class technician_gui(QMainWindow):
         self.fileName = filename
         self.on_pushButtonLoad_clicked
         self.model = QtGui.QStandardItemModel(self.widget)
-        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %', 'Status'])
+        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %', 'Result'])
 
         self.tableView = QTableView(self.widget)
         self.tableView.setModel(self.model)
@@ -262,7 +262,7 @@ class technician_gui(QMainWindow):
                 '\nMonocyte %\t\t{ii}'
                 '\nNeutrophil %\t\t{jj}'
                 '\n'
-                '\nSTATUS\t\t\t{kk}'
+                '\nRESULT\t\t\t{kk}'
                     .format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk))
         except:
             print("Edit Line Empty")

@@ -41,9 +41,9 @@ class home_gui(QMainWindow):
         self.widget.layout().setRowMinimumHeight(3, 100)
         self.showMaximized()
 
-        button_createaccount = QPushButton('Create Account')
-        button_createaccount.clicked.connect(self.button_createaccount_clicked)
-        self.widget.layout().addWidget(button_createaccount, 1, 1)
+        #button_createaccount = QPushButton('Create Account')
+        #button_createaccount.clicked.connect(self.button_createaccount_clicked)
+        #self.widget.layout().addWidget(button_createaccount, 1, 1)
 
         button_login = QPushButton('Login')
         button_login.clicked.connect(self.button_login_clicked)
