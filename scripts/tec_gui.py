@@ -103,17 +103,32 @@ class technician_gui(QMainWindow):
 
 
         #==================# BUTTONS #==================#
+
         #RUN NEW SPECIMEN BUTTON
         button_run_new = QPushButton('Run New Specimen')
         button_run_new.clicked.connect(self.button_run_new_clicked)
         #layout1.addRow(button_run_new)
         layout1.addWidget(button_run_new, 0, 0, 1, 1)
+
         # UPDATE DATABASE BUTTON
         pushButtonLoad = QtWidgets.QPushButton(self.widget)
         pushButtonLoad.setText("View All Runs")
         pushButtonLoad.clicked.connect(self.on_pushButtonLoad_clicked)
         #layout1.addRow(button_run_new, pushButtonLoad)
         layout1.addWidget(pushButtonLoad, 0, 1, 1, 1)
+
+        # TRUE NORMAL BUTTON
+        pushButtonNormalDiffs = QtWidgets.QPushButton(self.widget)
+        pushButtonNormalDiffs.setText("Normal Results")
+        #pushButtonNormalDiffs.clicked.setText(QColor.blue("Normal Results"))
+        pushButtonNormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked) # Need to connect to correct DB
+        layout1.addWidget(pushButtonNormalDiffs, 0, 2, 1, 1)
+
+        # TRUE ABNORMAL BUTTON
+        pushButtonAbnormalDiffs = QtWidgets.QPushButton(self.widget)
+        pushButtonAbnormalDiffs.setText("Abnormal Results")
+        pushButtonAbnormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked) # Need to connect to correct DB
+        layout1.addWidget(pushButtonAbnormalDiffs, 0, 3, 1, 1)
 
         #==================# END OF BUTTONS #==================#
 
@@ -149,7 +164,7 @@ class technician_gui(QMainWindow):
         self.tableView.setColumnHidden(9, True);
         self.tableView.setColumnHidden(10, False);
         #layout1.addRow(self.tableView)
-        layout1.addWidget(self.tableView, 1, 0, 1, 2)
+        layout1.addWidget(self.tableView, 1, 0, 1, 4)
         # ==================# END OF TABLE DATABASE #==================#
 
 
@@ -218,7 +233,6 @@ class technician_gui(QMainWindow):
 
 
     #===============# FIND IMAGE BUTTON  AND VIEW#===============#
-
 
 
     @QtCore.pyqtSlot()
