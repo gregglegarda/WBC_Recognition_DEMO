@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (QMainWindow, QApplication, QComboBox, QDialog,
 from PyQt5.QtGui import QPalette,QColor, QBrush, QPixmap, QIntValidator
 from PyQt5 import QtGui
 import sys
+from PyQt5 import QtCore
 import numpy as np
 from datetime import datetime
 from uuid import uuid4
@@ -63,11 +64,18 @@ class data_entry(QDialog):
     def makeform(self):
         self.formGroupBox = QGroupBox()
         layout = QFormLayout()
+        regex = QtCore.QRegExp("[a-z-A-Z_]+")
+        validator = QtGui.QRegExpValidator(regex)
+
+
+
         self.line_edit_firstname = QLineEdit()
         self.line_edit_firstname.setPlaceholderText('First Name')
+        self.line_edit_firstname.setValidator(validator)
 
         self.line_edit_lastname = QLineEdit()
         self.line_edit_lastname.setPlaceholderText('Last Name')
+        self.line_edit_lastname.setValidator(validator)
 
         self.line_edit_dob = QLineEdit()
         self.line_edit_dob = LineEditDOB(self.formGroupBox)
