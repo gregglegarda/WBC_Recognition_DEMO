@@ -147,7 +147,7 @@ class technician_gui(QMainWindow):
         self.tableView.setColumnHidden(7, True);
         self.tableView.setColumnHidden(8, True);
         self.tableView.setColumnHidden(9, True);
-        self.tableView.setColumnHidden(10, True);
+        self.tableView.setColumnHidden(10, False);
         #layout1.addRow(self.tableView)
         layout1.addWidget(self.tableView, 1, 0, 1, 2)
         # ==================# END OF TABLE DATABASE #==================#

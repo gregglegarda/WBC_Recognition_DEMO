@@ -65,7 +65,7 @@ class doctor_gui(QMainWindow):
         self.showMaximized()
         #THEME COLOR
         self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
-        print("Pathologist GUI Screen")
+        print("Doctor GUI Screen")
 
         #Small group1
         self.GroupBox1 = QGroupBox()

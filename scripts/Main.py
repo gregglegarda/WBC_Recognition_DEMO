@@ -35,7 +35,7 @@ while True:
         #############################  IF LOGIN SUCCESSFUL  RUN  TERMINALS    #########################
 
         #======================# DOCTOR GUI #======================#
-        if usertype == "Pathologist":
+        if usertype == "Doctor":
             print("Running Doctor Terminal")
             from scripts import doc_gui
             docapp, run = doc_gui.runit(app)
