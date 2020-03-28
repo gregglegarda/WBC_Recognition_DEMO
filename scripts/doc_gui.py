@@ -82,9 +82,10 @@ class doctor_gui(QMainWindow):
         self.GroupBox2.setLayout(layout2)
         layout2.setContentsMargins(5, 5, 5, 5)
         layout2.setSpacing(5)
-        layout2.setColumnStretch(0, 2)
-        layout2.setColumnStretch(2,1)
+        layout2.setColumnStretch(0, 3)
+        layout2.setColumnStretch(2,2)
         layout2.setColumnStretch(3, 1)
+        layout2.setColumnStretch(4, 1)
         layout2.setRowStretch(1, 4)
         layout2.setRowStretch(2, 1)
         self.widget.layout().addWidget(self.GroupBox2, 1, 0,1,3)
@@ -121,48 +122,58 @@ class doctor_gui(QMainWindow):
         # ==================+++++++++++++++++++++++++# FIRST SECTION #+++++++++++++++++++++++++==================#
         #==================# BUTTONS #==================#
         # TRUE NORMAL BUTTON
-        #pushButtonNormalDiffs = QtWidgets.QPushButton(self.widget)
-        #pushButtonNormalDiffs.setText("True Normal")
-        #pushButtonNormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked)
-        #layout1.addWidget(pushButtonNormalDiffs, 0, 0, 1, 1)
+        pushButtonNormalDiffs = QtWidgets.QPushButton(self.widget)
+        pushButtonNormalDiffs.setText("Normal")
+        pushButtonNormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked4)
+        layout1.addWidget(pushButtonNormalDiffs, 0, 0, 1, 1)
 
         # TRUE ABNORMAL BUTTON
-        #pushButtonAbormalDiffs = QtWidgets.QPushButton(self.widget)
-        #pushButtonAbormalDiffs.setText("True Abnormal")
-        #pushButtonAbormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked)
-        #layout1.addWidget(pushButtonAbormalDiffs, 0, 1, 1, 1)
+        pushButtonAbormalDiffs = QtWidgets.QPushButton(self.widget)
+        pushButtonAbormalDiffs.setText("Abnormal")
+        pushButtonAbormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked5)
+        layout1.addWidget(pushButtonAbormalDiffs, 0, 1, 1, 1)
 
         #TO BE REVIEWED BUTTON
         pushButtonUnreviewed = QtWidgets.QPushButton(self.widget)
         pushButtonUnreviewed.setText("In Progress")
         pushButtonUnreviewed.clicked.connect(self.on_pushButtonLoad_clicked2)
-        layout1.addWidget(pushButtonUnreviewed, 0, 0, 1, 1)
-
+        layout1.addWidget(pushButtonUnreviewed, 0, 2, 1, 1)
         # REVIEWED BUTTON
         pushButtonReviewed = QtWidgets.QPushButton(self.widget)
         pushButtonReviewed.setText("Reviewed")
         pushButtonReviewed.clicked.connect(self.on_pushButtonLoad_clicked3)
-        layout1.addWidget(pushButtonReviewed, 0, 1, 1, 1)
+        layout1.addWidget(pushButtonReviewed, 0, 3, 1, 1)
         #==================# END OF BUTTONS #==================#
 
         #==================# TABLE DATABASE #==================#
-        #filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
-        #self.items = []
-        #self.fileName = filename
-        #self.on_pushButtonLoad_clicked
+        filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_allruns.csv")
+        self.items = []
+        self.fileName = filename
+        self.on_pushButtonLoad_clicked
 
         filename2 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_outofrange.csv")
-        #self.items2 = []
-        #self.fileName2 = filename2
-        #self.on_pushButtonLoad_clicked2
+        self.items2 = []
+        self.fileName2 = filename2
+        self.on_pushButtonLoad_clicked2
 
         filename3 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_reviewed.csv")
         self.items3 = []
         self.fileName3 = filename3
         self.on_pushButtonLoad_clicked3
 
+        filename4 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_normal.csv")
+        self.items4 = []
+        self.fileName4 = filename4
+        self.on_pushButtonLoad_clicked4
+
+        filename5 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_abnormal.csv")
+        self.items5 = []
+        self.fileName5 = filename5
+        self.on_pushButtonLoad_clicked5
+
+
         self.model = QtGui.QStandardItemModel(self.widget)
-        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %', 'Status', 'Comments'])
+        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %', 'Initial Status', 'Comments'])
 
         self.tableView = QTableView(self.widget)
         self.tableView.setModel(self.model)
@@ -176,17 +187,17 @@ class doctor_gui(QMainWindow):
         self.tableView.setColumnWidth(7, 60)  # L
         self.tableView.setColumnWidth(8, 60)  # M
         self.tableView.setColumnWidth(9, 60)  # N
-        self.tableView.setColumnWidth(10, 170) # Status
+        self.tableView.setColumnWidth(10, 170) # Initial Status
         self.tableView.setColumnWidth(11, 170)  # Comments
 
         self.tableView.horizontalHeader().setStretchLastSection(True)
         self.tableView.setSortingEnabled(True)
         self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.tableView.setColumnHidden(6, True);
-        self.tableView.setColumnHidden(7, True);
-        self.tableView.setColumnHidden(8, True);
-        self.tableView.setColumnHidden(9, True);
+        self.tableView.setColumnHidden(6, True)
+        self.tableView.setColumnHidden(7, True)
+        self.tableView.setColumnHidden(8, True)
+        self.tableView.setColumnHidden(9, True)
         layout1.addWidget(self.tableView, 1, 0, 1, 4)
         # ==================# END OF TABLE DATABASE #==================#
 
@@ -204,7 +215,7 @@ class doctor_gui(QMainWindow):
         viewImage_button = QPushButton('View Differential')
         viewImage_button.clicked.connect(self.button_find_specimen_clicked)
         #layout2.addRow(self.line_edit_viewImage, viewImage_button)
-        layout2.addWidget(viewImage_button, 0, 3, 1, 1)
+        layout2.addWidget(viewImage_button, 0, 3, 1, 2)
 
         #image box
         self.imageView = QLabel(self.widget)
@@ -214,7 +225,7 @@ class doctor_gui(QMainWindow):
         self.scroll = QtWidgets.QScrollArea(self.widget)
         self.scroll.setWidget(self.imageView)
         #layout2.addRow(self.scroll)
-        layout2.addWidget(self.scroll, 1, 0, 1, 4)
+        layout2.addWidget(self.scroll, 1, 0, 1, 5)
 
         # ==================# END VIEW IMAGE DATABASE #==================#
 
@@ -252,12 +263,17 @@ class doctor_gui(QMainWindow):
         self.comment_text_edit = QPlainTextEdit()
         self.comment_text_edit.setPlaceholderText('Enter Pathologist Comments')
         self.comment_text_edit.mousePressEvent = lambda _: self.comment_text_edit.selectAll()
-        layout2.addWidget(self.comment_text_edit, 2, 3, 1, 1)
+        layout2.addWidget(self.comment_text_edit, 2, 3, 1, 2)
 
-        # PATHOLOGIST REVIEW BUTTON
-        button_path_review = QPushButton('Submit Review')
-        button_path_review.clicked.connect(self.button_path_review_clicked)
-        layout2.addWidget(button_path_review, 3, 3, 1, 1)
+        # PATHOLOGIST NORMAL REVIEW BUTTON
+        button_path_review_normal = QPushButton('Submit Review As Normal')
+        button_path_review_normal.clicked.connect(self.button_path_review_clicked_normal)
+        layout2.addWidget(button_path_review_normal, 3, 3, 1, 1)
+
+        # PATHOLOGIST ABNORMAL REVIEW BUTTON
+        button_path_review_abnormal = QPushButton('Submit Review As Abnormal')
+        button_path_review_abnormal.clicked.connect(self.button_path_review_clicked_abnormal)
+        layout2.addWidget(button_path_review_abnormal, 3, 4, 1, 1)
 
         # ==================# END OF COMMENTS #==================#
 
@@ -275,43 +291,48 @@ class doctor_gui(QMainWindow):
 
 
 
-    # ==============================# SUBMIT REVIEW FUNCTION#==============================#
+    # ==============================# SUBMIT NORMAL OR ABNORMAL REVIEW FUNCTION#==============================#
     @QtCore.pyqtSlot()
-    def button_path_review_clicked(self):
-        self.loadEntry(self.fileName2,self.fileName3)
-    def loadEntry(self, fileName2,fileName3):
+    def button_path_review_clicked_normal(self):
+        self.loadEntry(self.fileName2, self.fileName3, self.fileName4)
+    @QtCore.pyqtSlot()
+    def button_path_review_clicked_abnormal(self):
+        self.loadEntry(self.fileName2, self.fileName3, self.fileName5)
+
+    def loadEntry(self, fileName2, fileName3, fileName45):
         # save results to csv files
         try:  # try this first if there is a file. if none, go to except
 
-            lines =list()
+            lines = list()
             with open(fileName3, 'a') as f3:  # output csv file
                 writer3 = csv.writer(f3)
-                with open(fileName2, 'r') as myfile:  # input csv file
-                    reader = csv.reader(myfile, delimiter=',')
-                    for entry in reader:
-                        editline = self.line_edit_viewImage.text()
-                        print(reader)
-                        print("0", entry)
-                        print("1", entry[0])
-                        print("2", editline)
-                        #move to the reviewed database
-                        if entry[0] == editline:
-                            row = entry
-                            row.append(str(self.comment_text_edit.toPlainText()))
-                            writer3.writerow(row)
-                        ### if the entry is not the editline, remove from the database since it was moved to the reviewed database
-                        else:
-                            lines.append(entry)
+                with open(fileName45, 'a') as f45:  # output csv file
+                    writer45 = csv.writer(f45)
+                    with open(fileName2, 'r') as myfile:  # input csv file
+                        reader = csv.reader(myfile, delimiter=',')
+                        for entry in reader:
+                            editline = self.line_edit_viewImage.text()
+                            print(reader)
+                            print("0", entry)
+                            print("1", entry[0])
+                            print("2", editline)
+                            # move to the reviewed database
+                            if entry[0] == editline:
+                                row = entry
+                                row.append(str(self.comment_text_edit.toPlainText()))
+                                writer3.writerow(row)
+                                writer45.writerow(row)
+                            ### if the entry is not the editline, remove from the database since it was moved to the reviewed database
+                            else:
+                                lines.append(entry)
 
-                    with open(fileName2, 'w') as writeFile:
-                        writer2 = csv.writer(writeFile)
-                        writer2.writerows(lines)
-
+                        with open(fileName2, 'w') as writeFile:
+                            writer2 = csv.writer(writeFile)
+                            writer2.writerows(lines)
+            self.comment_text_edit.clear()
 
         except IOError:
             print("No entry to review")
-
-
 
 
 
@@ -423,6 +444,43 @@ class doctor_gui(QMainWindow):
         except:
             print("No Reviewed Database")
 
+    # ==============# FUNCTION (NORMAL)#==============#
+    @QtCore.pyqtSlot()
+    def on_pushButtonLoad_clicked4(self):
+        self.loadCsv4(self.fileName4)
+
+    def loadCsv4(self, fileName):
+        while (self.model.rowCount() > 0):
+            self.model.removeRow(0)
+        try:
+            with open(fileName, "r") as fileInput:
+                for row in csv.reader(fileInput):
+                    self.items4 = [
+                        QtGui.QStandardItem(field)
+                        for field in row
+                    ]
+                    self.model.appendRow(self.items4)
+        except:
+            print("No Normal Database")
+
+    # ==============# FUNCTION (ABNORMAL)#==============#
+    @QtCore.pyqtSlot()
+    def on_pushButtonLoad_clicked5(self):
+        self.loadCsv5(self.fileName5)
+
+    def loadCsv5(self, fileName):
+        while (self.model.rowCount() > 0):
+            self.model.removeRow(0)
+        try:
+            with open(fileName, "r") as fileInput:
+                for row in csv.reader(fileInput):
+                    self.items5 = [
+                        QtGui.QStandardItem(field)
+                        for field in row
+                    ]
+                    self.model.appendRow(self.items5)
+        except:
+            print("No Abnormal Database")
     # ==============================# READ CSV FOR DISPLAY FUNCTION#==============================#
     def readCsvForSpecInfo(self, fileName, editline):
         try:

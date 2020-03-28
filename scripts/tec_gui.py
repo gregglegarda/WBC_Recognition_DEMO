@@ -133,7 +133,7 @@ class technician_gui(QMainWindow):
         #==================# END OF BUTTONS #==================#
 
         #==================# TABLE DATABASE #==================#
-        filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
+        filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_allruns.csv")
         self.items = []
         self.fileName = filename
         self.on_pushButtonLoad_clicked
@@ -411,22 +411,23 @@ class technician_gui(QMainWindow):
             #================# SAVE THE RECORD (RESULTS AND IMAGES) ON A DATABASE #================#
             #header = ["Accession ID","Accession Date/Time","Specimen Type","First Name","Last Name","Date of Birth (MM-DD-YYYY)","Social Security Number (XXX-XX-XXXX)","Eosinophils%","Lymphocytes%","Monocytes%","Neutrophils%"]
             row_results = specinfo + diff_results
-            filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records.csv")
+            filename = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_allruns.csv")
             filename2 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_outofrange.csv")
+            filename4 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_normal.csv")
             #save results to csv files
             try:                    #try this first if there is a file. if none, go to except
                 with open(filename, 'a', newline='') as myfile:  # a means append, it will create a new file if it doesnt exist
                     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
                     wr.writerow(row_results)
-                    print("\nPatient File Saved in Database")
+                    print("\nPatient File Saved in All Runs Database (Initial Run)")
             except IOError:
                 with open(filename, 'a', newline='') as myfile:  # a means append, it will create a new file if it doesnt exist
                     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
                     #wr.writerow(header)
                     wr.writerow(row_results)
-                    print("\nPatient File Saved in Database")
+                    print("\nPatient File Saved in All Runs Database (Initial Run)")
 
-            # save results here if flagged result is F
+            # save results here if flagged result is OUT OF RANGE
             if flagged_result == "OUT OF RANGE":
                 try:  # try this first if there is a file. if none, go to except
                     with open(filename2, 'a',
@@ -441,6 +442,22 @@ class technician_gui(QMainWindow):
                         #wr2.writerow(header)
                         wr2.writerow(row_results)
                         print("\nPatient File Saved in Out of Range Database")
+            # save results here if flagged result is NORMAL
+            else:
+                try:  # try this first if there is a file. if none, go to except
+                    with open(filename4, 'a',
+                              newline='') as myfile4:  # a means append, it will create a new file if it doesnt exist
+                        wr4 = csv.writer(myfile4, quoting=csv.QUOTE_ALL)
+                        wr4.writerow(row_results)
+                        print("\nPatient File Saved in Normal Database")
+                except IOError:
+                    with open(filename4, 'a',
+                              newline='') as myfile2:  # a means append, it will create a new file if it doesnt exist
+                        wr4 = csv.writer(myfile4, quoting=csv.QUOTE_ALL)
+                        # wr2.writerow(header)
+                        wr4.writerow(row_results)
+                        print("\nPatient File Saved in Normal Database")
+
             #save the images based on unique id (accesson)
             specimen_fig.savefig(os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/"+str(accession)))
             #================# END OF SAVE THE RECORD (RESULTS AND IMAGES) ON A DATABASE   #================#

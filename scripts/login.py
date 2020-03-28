@@ -66,7 +66,7 @@ class login(QDialog):
         label_person = QLabel('User Type')
         self.combo_label_person = QComboBox()
         self.combo_label_person.addItem("Technician")
-        self.combo_label_person.addItem("Patient")
+        #self.combo_label_person.addItem("Patient")
         self.combo_label_person.addItem("Doctor")
 
         button_login = QPushButton('Login')
