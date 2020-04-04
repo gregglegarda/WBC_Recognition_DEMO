@@ -25,9 +25,10 @@ class pat_login(QDialog):
         self.app = app
         super(pat_login, self).__init__()
 
-        self.firstname_info = "a"
-        self.lastname_info = "a"
-        self.ssn_info = "a"
+        self.firstname_info = "a"   #2
+        self.lastname_info = "a"    #3
+        self.dob_info = "a"         #4
+        self.ssn_info = "a"         #5
         self.makeform()
 
 
@@ -36,7 +37,7 @@ class pat_login(QDialog):
         #mainLayout.addWidget(buttonBox)
         self.setLayout(mainLayout)
 
-        self.setWindowTitle("Enter Patient Information")
+        self.setWindowTitle("Check Patient Results")
         #self.showMaximized()
 
         #THEME COLOR
@@ -73,7 +74,7 @@ class pat_login(QDialog):
         #self.combo_label_person.addItem("Technician")
         #self.combo_label_person.addItem("Doctor")
 
-        button_login = QPushButton('Login')
+        button_login = QPushButton('Check Results')
         button_login.clicked.connect(self.check_password)
         button_login.clicked.connect(self.successlogin)
 

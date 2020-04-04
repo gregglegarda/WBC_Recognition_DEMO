@@ -121,13 +121,13 @@ class technician_gui(QMainWindow):
         pushButtonNormalDiffs = QtWidgets.QPushButton(self.widget)
         pushButtonNormalDiffs.setText("Normal")
         #pushButtonNormalDiffs.clicked.setText(QColor.blue("Normal Results"))
-        pushButtonNormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked4) # Need to connect to correct DB
+        pushButtonNormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked4)
         layout1.addWidget(pushButtonNormalDiffs, 0, 2, 1, 1)
 
         # TRUE ABNORMAL BUTTON
         pushButtonAbnormalDiffs = QtWidgets.QPushButton(self.widget)
         pushButtonAbnormalDiffs.setText("Abnormal")
-        pushButtonAbnormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked5) # Need to connect to correct DB
+        pushButtonAbnormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked5)
         layout1.addWidget(pushButtonAbnormalDiffs, 0, 3, 1, 1)
 
         #==================# END OF BUTTONS #==================#
@@ -237,7 +237,7 @@ class technician_gui(QMainWindow):
         layout4.addWidget(self.specimen_results_label, 0, 0, 1, 2)
         # ==================# END OF WBC RESULTS BOX #==================#
 
-        ##LOGOUT BUTTON RUN NEW SPECIMEN BUTTON
+        ##LOGOUT BUTTON
         button_logout = QPushButton('Logout')
         button_logout.clicked.connect(self.logout_success)
         #layout2.addRow(button_logout)
