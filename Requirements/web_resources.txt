@@ -1,0 +1,3 @@
+https://www.kaggle.com/paultimothymooney/blood-cells
+https://towardsdatascience.com/image-detection-from-scratch-in-keras-f314872006c9
+https://towardsdatascience.com/transfer-learning-and-image-classification-using-keras-on-kaggle-kernels-c76d3b030649
