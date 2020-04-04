@@ -60,10 +60,10 @@ class login(QDialog):
         self.line_edit_password.setEchoMode(QLineEdit.Password)
 
 
-        self.username = QLabel("User Name")
+        self.username = QLabel("User Name:")
         self.password = QLabel("Password:")
 
-        label_person = QLabel('User Type')
+        label_person = QLabel('User Type:')
         self.combo_label_person = QComboBox()
         self.combo_label_person.addItem("Technician")
         #self.combo_label_person.addItem("Patient")

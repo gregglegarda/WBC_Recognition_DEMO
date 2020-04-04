@@ -25,6 +25,7 @@ class home_gui(QMainWindow):
         super().__init__()
         self.successful= 0
         self.usertype = 0
+
         self.setWindowTitle('Osmosis Jones Counter')
         self.resize(500, 190)
 
@@ -41,9 +42,9 @@ class home_gui(QMainWindow):
         self.widget.layout().setRowMinimumHeight(3, 100)
         self.showMaximized()
 
-        button_createaccount = QPushButton('Patients')
-        button_createaccount.clicked.connect(self.button_createaccount_clicked)
-        self.widget.layout().addWidget(button_createaccount, 1, 1)
+        button_pat_login = QPushButton('Patients')
+        button_pat_login.clicked.connect(self.button_login_clicked2)
+        self.widget.layout().addWidget(button_pat_login, 1, 1)
 
         button_login = QPushButton('Medical Personnel')
         button_login.clicked.connect(self.button_login_clicked)
@@ -54,7 +55,7 @@ class home_gui(QMainWindow):
         self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
         print("Home Screen")
 
-
+    #======================== LOGIN FUNCTION ==========================#
     @QtCore.pyqtSlot()
     def button_login_clicked(self):
         #self.login_button()
@@ -65,11 +66,11 @@ class home_gui(QMainWindow):
     def login_button(self):
         return self.successful, self.usertype
 
+    # ======================== PATIENT LOGIN FUNCTION ==========================#
     @QtCore.pyqtSlot()
-    def button_createaccount_clicked(self):
-        self.createaccount_button()
-    def createaccount_button(self):
-        x=0
-        #from scripts import login
-        #running = login.runit(self.app)
+    def button_login_clicked2(self):
+        #self.login_button()
+        from scripts import pat_login
+        loginapp2 = pat_login.runit(self.app)
+        self.successful, self.usertype = loginapp2.successlogin()
 

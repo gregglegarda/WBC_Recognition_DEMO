@@ -22,8 +22,14 @@ while True:
 
         #======================# LOG IN #=======================#
         from scripts import hom_gui
-        homapp,run = hom_gui.runit(app)
+        homapp, run = hom_gui.runit(app)
+
+        #medical personell
         succ, usertype = homapp.login_button()
+
+        #patient
+        #succ, usertype = homapp.login_button2()
+
         if succ != True:
             print("Login Closed.. Quitting..")
             hom_gui.stop(run)
