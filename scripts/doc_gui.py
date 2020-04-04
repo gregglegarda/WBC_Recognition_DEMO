@@ -171,33 +171,40 @@ class doctor_gui(QMainWindow):
         self.fileName5 = filename5
         self.on_pushButtonLoad_clicked5
 
-
+        #set model settings
         self.model = QtGui.QStandardItemModel(self.widget)
-        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %', 'Initial Status', 'Comments'])
-
+        self.model.setHorizontalHeaderLabels(['Accession ID', 'Acc Date', 'First Name', 'Last Name', 'DOB', 'SSN', 'EOS %', 'LYM %','MON %', 'NEU %', 'Initial Result', 'Final Result'])
         self.tableView = QTableView(self.widget)
         self.tableView.setModel(self.model)
-        self.tableView.setColumnWidth(0, 370)  # id
-        self.tableView.setColumnWidth(1, 170)  # date
-        self.tableView.setColumnWidth(2, 170)  # first
-        self.tableView.setColumnWidth(3, 170)  # last
-        self.tableView.setColumnWidth(4, 155)  # DOB
-        self.tableView.setColumnWidth(5, 155)  # SSN
-        self.tableView.setColumnWidth(6, 60)  # E
-        self.tableView.setColumnWidth(7, 60)  # L
-        self.tableView.setColumnWidth(8, 60)  # M
-        self.tableView.setColumnWidth(9, 60)  # N
-        self.tableView.setColumnWidth(10, 170) # Initial Status
-        self.tableView.setColumnWidth(11, 170)  # Comments
-
         self.tableView.horizontalHeader().setStretchLastSection(True)
         self.tableView.setSortingEnabled(True)
         self.model.rowsInserted.connect(lambda: QtCore.QTimer.singleShot(0, self.tableView.scrollToBottom))
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+
+        # set widths
+        self.tableView.setColumnWidth(0, 325)  # id
+        self.tableView.setColumnWidth(1, 200)  # date
+        self.tableView.setColumnWidth(2, 120)  # first
+        self.tableView.setColumnWidth(3, 120)  # last
+        self.tableView.setColumnWidth(4, 120)  # DOB
+        self.tableView.setColumnWidth(5, 120)  # SSN
+        self.tableView.setColumnWidth(6, 60)  # E
+        self.tableView.setColumnWidth(7, 60)  # L
+        self.tableView.setColumnWidth(8, 60)  # M
+        self.tableView.setColumnWidth(9, 60)  # N
+        self.tableView.setColumnWidth(10, 150)  # Initial result
+
+        #hide columns
         self.tableView.setColumnHidden(6, True)
         self.tableView.setColumnHidden(7, True)
         self.tableView.setColumnHidden(8, True)
         self.tableView.setColumnHidden(9, True)
+
+
+
+
+        #add to layout
         layout1.addWidget(self.tableView, 1, 0, 1, 4)
         # ==================# END OF TABLE DATABASE #==================#
 
