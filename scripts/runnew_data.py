@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QComboBox, QDialog,
                              QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
-                             QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
+                             QLabel, QLineEdit, QDateEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
                              QVBoxLayout,QMessageBox, QProgressBar)
 from PyQt5.QtGui import QPalette,QColor, QBrush, QPixmap, QIntValidator
 from PyQt5 import QtGui
@@ -77,9 +77,13 @@ class data_entry(QDialog):
         self.line_edit_lastname.setPlaceholderText('Last Name')
         self.line_edit_lastname.setValidator(validator)
 
-        from scripts.line_edit import LineEditDOB
-        self.line_edit_dob = QLineEdit()
-        self.line_edit_dob = LineEditDOB(self.formGroupBox)
+        #from scripts.line_edit import LineEditDOB
+        #self.line_edit_dob = QLineEdit()
+        #self.line_edit_dob = LineEditDOB(self.formGroupBox)
+        self.line_edit_dob = QDateEdit()
+        self.line_edit_dob.setDisplayFormat("MM/dd/yyyy")
+
+
 
         from scripts.line_edit import LineEditSSN
         self.line_edit_ssn = QLineEdit()
