@@ -80,7 +80,7 @@ class pat_login(QDialog):
         self.line_edit_lastname.setPlaceholderText('Enter Last Name')
         self.line_edit_lastname.setValidator(validator)
 
-        #from scripts.line_edit import LineEditDOB
+
         self.line_edit_dob = QDateEdit()
         self.line_edit_dob.setDisplayFormat("MM/dd/yyyy")
         #self.line_edit_dob = LineEditDOB(self.formGroupBox)
