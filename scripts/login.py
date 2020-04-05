@@ -115,5 +115,5 @@ class login(QDialog):
             user_type= None
             result = False
 
-        return(result,user_type)
+        return(result,user_type, 0,0,0,0)
 

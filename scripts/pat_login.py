@@ -3,7 +3,10 @@ from PyQt5.QtWidgets import (QMainWindow, QApplication, QComboBox, QDialog,
                              QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
                              QVBoxLayout,QMessageBox)
 from PyQt5.QtGui import QPalette,QColor, QBrush, QPixmap
+import csv
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5 import Qt
+import os
 import sys
 import numpy as np
 from datetime import datetime
@@ -24,11 +27,20 @@ class pat_login(QDialog):
     def __init__(self,app):
         self.app = app
         super(pat_login, self).__init__()
+        #=============== LOGIN INFO================
+        filename4 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_normal.csv")
+        self.fileName4 = filename4
 
-        self.firstname_info = "a"   #2
-        self.lastname_info = "a"    #3
-        self.dob_info = "a"         #4
-        self.ssn_info = "a"         #5
+        filename5 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_abnormal.csv")
+        self.fileName5 = filename5
+
+        self.input_result = 0
+        self.firstname_info = 0
+        self.lastname_info = 0
+        self.dob_info = 0
+        self.ssn_info = 0
+
+
         self.makeform()
 
 
@@ -59,13 +71,16 @@ class pat_login(QDialog):
         self.line_edit_firstname.setPlaceholderText('Enter First Name')
         self.line_edit_lastname = QLineEdit()
         self.line_edit_lastname.setPlaceholderText('Enter Last Name')
+        self.line_edit_dob = QLineEdit()
+        self.line_edit_dob.setPlaceholderText('Enter DOB')
         self.line_edit_ssn = QLineEdit()
         self.line_edit_ssn.setPlaceholderText('Enter 9-Digit SSN')
-        self.line_edit_ssn.setEchoMode(QLineEdit.Password)
+        #self.line_edit_ssn.setEchoMode(QLineEdit.Password)
 
 
         self.firstname = QLabel("First Name:")
         self.lastname = QLabel("Last Name:")
+        self.dob = QLabel("Last Name:")
         self.ssn = QLabel("SSN:")
 
 
@@ -81,6 +96,7 @@ class pat_login(QDialog):
 
         layout.addRow(self.firstname, self.line_edit_firstname )
         layout.addRow(self.lastname, self.line_edit_lastname)
+        layout.addRow(self.dob, self.line_edit_dob)
         layout.addRow(self.ssn, self.line_edit_ssn)
         #layout.addRow(label_person, self.combo_label_person)
         layout.addRow(button_login)
@@ -92,14 +108,19 @@ class pat_login(QDialog):
 
     def check_password(self):
         msg = QMessageBox()
-        if (self.line_edit_firstname.text() == self.firstname_info) and (self.line_edit_lastname.text() == self.lastname_info) and (self.line_edit_ssn.text() == self.ssn_info):
+        self.input_result = self.loadCsv4(self.fileName4)
+        self.input_result2 = self.loadCsv5(self.fileName5)
+
+        print("Normal Database", self.input_result)
+        print("Abormal Database", self.input_result2)
+        if  self.input_result == True or self.input_result2 == True:
             user_type = "Patient"
             result = True
             self.success = True
             msg.setText('Success')
             msg.exec_()
             #self.app.quit()
-        elif (self.line_edit_firstname.text() == "") or (self.line_edit_lastname.text() == "") or (self.line_edit_ssn.text() == ""):
+        elif (self.line_edit_firstname.text() == "") or (self.line_edit_lastname.text() == "")  or (self.line_edit_ssn.text() == "") or (self.line_edit_dob.text() == ""):
             msg.setText('Empty Fields')
             msg.exec_()
             user_type= None
@@ -113,7 +134,7 @@ class pat_login(QDialog):
 
 
     def successlogin(self):
-        if (self.line_edit_firstname.text() == self.firstname_info) and (self.line_edit_lastname.text() == self.lastname_info) and (self.success==True):
+        if (self.input_result == True or self.input_result2 == True) and (self.success==True):
             user_type = "Patient"
             result = True
             self.app.quit()
@@ -121,5 +142,26 @@ class pat_login(QDialog):
             user_type= None
             result = False
 
-        return(result,user_type)
+        return(result,user_type, self.line_edit_firstname.text(), self.line_edit_lastname.text(),self.line_edit_dob.text(),self.line_edit_ssn.text())
+
+    # ==============# FUNCTION LOAD (NORMAL)#==============#
+
+    def loadCsv4(self, fileName):
+        try:
+            with open(fileName, "r") as fileInput:
+                for row in csv.reader(fileInput):
+                    if self.line_edit_firstname.text() == row[2] and self.line_edit_lastname.text() == row[3] and self.line_edit_dob.text() == row[4] and self.line_edit_ssn.text() == row[5]:
+                        print(self.line_edit_firstname.text(),"=", row[2] ,"and", self.line_edit_lastname.text() ,"=", row[3] ,"and", self.line_edit_dob.text() ,"=", row[4] ,"and", self.line_edit_ssn.text() ,"=", row[5])
+                        return True
+        except:
+            print("No Normal Database")
+
+    def loadCsv5(self, fileName):
+        try:
+            with open(fileName, "r") as fileInput:
+                for row in csv.reader(fileInput):
+                    if self.line_edit_firstname.text() == row[2] and self.line_edit_lastname.text() == row[3] and self.line_edit_dob.text() == row[4] and self.line_edit_ssn.text() == row[5]:
+                        return True
+        except:
+            print("No Normal Database")
 

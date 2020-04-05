@@ -11,8 +11,8 @@ import os
 import ntpath
 
 
-def runit(app):
-    gui = patient_gui(app)
+def runit(app, fn, ln,dob,ssn):
+    gui = patient_gui(app, fn, ln,dob,ssn)
     run = app.exec_()
     return gui, run
 
@@ -21,9 +21,17 @@ def stop(run):
 
 class patient_gui(QMainWindow):
 
-    def __init__(self, app):
+    def __init__(self, app, pat_fn, pat_ln,pat_dob,pat_ssn):
         self.app = app
         super(patient_gui, self).__init__()
+
+
+        #=================VIEW IN TABLE INFO
+        self.firstname_info = pat_fn
+        self.lastname_info = pat_ln
+        self.dob_info = pat_dob
+        self.ssn_info = pat_ssn
+
         ##the main widget layout
         self.widget = QtWidgets.QWidget()
         self.setCentralWidget(self.widget)
@@ -130,11 +138,12 @@ class patient_gui(QMainWindow):
         try:
             with open(fileName, "r") as fileInput:
                 for row in csv.reader(fileInput):
-                    self.items4 = [
-                        QtGui.QStandardItem(field)
-                        for field in row
-                    ]
-                    self.model.appendRow(self.items4)
+                    if self.firstname_info == row[2] and self.lastname_info == row[3]:
+                        self.items4 = [
+                            QtGui.QStandardItem(field)
+                            for field in row
+                        ]
+                        self.model.appendRow(self.items4)
         except:
             print("No Normal Database")
 
@@ -149,16 +158,17 @@ class patient_gui(QMainWindow):
         try:
             with open(fileName, "r") as fileInput:
                 for row in csv.reader(fileInput):
-                    self.items5 = [
-                        QtGui.QStandardItem(field)
-                        for field in row
-                    ]
-                    self.model.appendRow(self.items5)
+                    if self.firstname_info == row[2] and self.lastname_info == row[3]:
+                        self.items5 = [
+                            QtGui.QStandardItem(field)
+                            for field in row
+                        ]
+                        self.model.appendRow(self.items5)
         except:
             print("No Abnormal Database")
 
 
-    # ===============# LOGOUT BUTTON#===============#
+    # ===============# LOGOUT FUNCTION#===============#
     def logout_success(self):
         msg = QMessageBox()
         msg.setText('Logged out successful')
@@ -167,3 +177,6 @@ class patient_gui(QMainWindow):
         self.close()
         #self.app.quit()
 
+
+
+    # ===============# LOAD CSV AND CHECK FOR THE LOGIN INFO#===============#

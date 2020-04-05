@@ -23,12 +23,7 @@ while True:
         #======================# LOG IN #=======================#
         from scripts import hom_gui
         homapp, run = hom_gui.runit(app)
-
-        #medical personell
-        succ, usertype = homapp.login_button()
-
-        #patient
-        #succ, usertype = homapp.login_button2()
+        succ, usertype, fn, ln,dob,ssn = homapp.login_button()
 
         if succ != True:
             print("Login Closed.. Quitting..")
@@ -50,7 +45,7 @@ while True:
         if usertype == "Patient":
             print("Running Patient Terminal")
             from scripts import pat_gui
-            patapp, run = pat_gui.runit(app)
+            patapp, run = pat_gui.runit(app,fn, ln,dob,ssn)
 
         #======================# TECHNICIAN GUI #======================#
         if usertype == "Technician":

@@ -55,16 +55,23 @@ class home_gui(QMainWindow):
         self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
         print("Home Screen")
 
+        #=====PASS PATIENT INFO THROUGH THESE VARIABLES
+        self.fn =0
+        self.ln =0
+        self.dob=0
+        self.ssn=0
+
+
     #======================== LOGIN FUNCTION ==========================#
     @QtCore.pyqtSlot()
     def button_login_clicked(self):
         #self.login_button()
         from scripts import login
         loginapp = login.runit(self.app)
-        self.successful, self.usertype = loginapp.successlogin()
+        self.successful, self.usertype,self.fn, self.ln, self.dob, self.ssn = loginapp.successlogin()
 
     def login_button(self):
-        return self.successful, self.usertype
+        return self.successful, self.usertype , self.fn, self.ln, self.dob, self.ssn
 
     # ======================== PATIENT LOGIN FUNCTION ==========================#
     @QtCore.pyqtSlot()
@@ -72,5 +79,5 @@ class home_gui(QMainWindow):
         #self.login_button()
         from scripts import pat_login
         loginapp2 = pat_login.runit(self.app)
-        self.successful, self.usertype = loginapp2.successlogin()
+        self.successful, self.usertype, self.fn, self.ln, self.dob, self.ssn = loginapp2.successlogin()
 
