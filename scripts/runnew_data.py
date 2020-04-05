@@ -77,9 +77,11 @@ class data_entry(QDialog):
         self.line_edit_lastname.setPlaceholderText('Last Name')
         self.line_edit_lastname.setValidator(validator)
 
+        from scripts.line_edit import LineEditDOB
         self.line_edit_dob = QLineEdit()
         self.line_edit_dob = LineEditDOB(self.formGroupBox)
 
+        from scripts.line_edit import LineEditSSN
         self.line_edit_ssn = QLineEdit()
         self.line_edit_ssn = LineEditSSN(self.formGroupBox)
 
@@ -127,18 +129,5 @@ class data_entry(QDialog):
 
 
 
-## DOB AND SSN CLASS FORMATS
-class LineEditDOB(QLineEdit):
-    def __init__(self, parent=None):
-        QLineEdit.__init__(self, parent=parent)
-        self.setPlaceholderText('MM/DD/YYYY')
-    def focusInEvent(self, event):
-        self.setInputMask('99/99/9999')
 
-class LineEditSSN(QLineEdit):
-    def __init__(self, parent=None):
-        QLineEdit.__init__(self, parent=parent)
-        self.setPlaceholderText('XXX-XX-XXXX')
-    def focusInEvent(self, event):
-        self.setInputMask('999-99-9999')
 

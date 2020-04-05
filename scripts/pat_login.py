@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QComboBox, QDialog,
                              QDialogButtonBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
-                             QLabel, QLineEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
+                             QLabel, QLineEdit, QDateEdit, QMenu, QMenuBar, QPushButton, QSpinBox, QTextEdit,
                              QVBoxLayout,QMessageBox)
 from PyQt5.QtGui import QPalette,QColor, QBrush, QPixmap
 import csv
@@ -35,6 +35,7 @@ class pat_login(QDialog):
         self.fileName5 = filename5
 
         self.input_result = 0
+        self.input_result2 = 0
         self.firstname_info = 0
         self.lastname_info = 0
         self.dob_info = 0
@@ -67,20 +68,34 @@ class pat_login(QDialog):
     def makeform(self):
         self.formGroupBox = QGroupBox()
         layout = QFormLayout()
+        regex = QtCore.QRegExp("[a-z-A-Z_]+")
+        validator = QtGui.QRegExpValidator(regex)
+
+
         self.line_edit_firstname = QLineEdit()
         self.line_edit_firstname.setPlaceholderText('Enter First Name')
+        self.line_edit_firstname.setValidator(validator)
+
         self.line_edit_lastname = QLineEdit()
         self.line_edit_lastname.setPlaceholderText('Enter Last Name')
-        self.line_edit_dob = QLineEdit()
-        self.line_edit_dob.setPlaceholderText('Enter DOB')
+        self.line_edit_lastname.setValidator(validator)
+
+        #from scripts.line_edit import LineEditDOB
+        self.line_edit_dob = QDateEdit()
+        self.line_edit_dob.setDisplayFormat("MM/dd/yyyy")
+        #self.line_edit_dob = LineEditDOB(self.formGroupBox)
+
+        from scripts.line_edit import LineEditSSN
         self.line_edit_ssn = QLineEdit()
-        self.line_edit_ssn.setPlaceholderText('Enter 9-Digit SSN')
-        #self.line_edit_ssn.setEchoMode(QLineEdit.Password)
+        self.line_edit_ssn = LineEditSSN(self.formGroupBox)
+
+
+
 
 
         self.firstname = QLabel("First Name:")
         self.lastname = QLabel("Last Name:")
-        self.dob = QLabel("Last Name:")
+        self.dob = QLabel("DOB:")
         self.ssn = QLabel("SSN:")
 
 
@@ -164,4 +179,6 @@ class pat_login(QDialog):
                         return True
         except:
             print("No Normal Database")
+
+
 
