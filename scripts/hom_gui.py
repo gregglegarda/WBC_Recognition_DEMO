@@ -6,7 +6,7 @@ import sys
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import (QFormLayout, QGroupBox, QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox,QInputDialog, QComboBox, QMainWindow)
-
+from PyQt5.QtGui import QPalette,QColor, QIcon, QPixmap
 
 
 def runit(app):
@@ -34,23 +34,44 @@ class home_gui(QMainWindow):
         self.widget = QtWidgets.QWidget()
         self.setCentralWidget(self.widget)
         self.widget.setLayout(QtWidgets.QGridLayout())
-        self.widget.layout().setContentsMargins(500, 250, 500, 250)
-        self.widget.layout().setSpacing(1)
-        self.widget.layout().setColumnMinimumWidth(0, 100)
-        self.widget.layout().setColumnMinimumWidth(2, 100)
-        self.widget.layout().setRowMinimumHeight(0, 100)
-        self.widget.layout().setRowMinimumHeight(3, 100)
+        self.widget.layout().setContentsMargins(625, 260, 625, 330)
+        self.widget.layout().setSpacing(20)
+        #self.widget.layout().setColumnMinimumWidth(0, 100)
+        #self.widget.layout().setColumnMinimumWidth(2, 100)
+        #self.widget.layout().setRowMinimumHeight(0, 100)
+        #self.widget.layout().setRowMinimumHeight(3, 100)
         self.showMaximized()
+
+        # Small group1
+        self.GroupBox1 = QGroupBox()
+        layout1 = QGridLayout()
+        self.GroupBox1.setLayout(layout1)
+        #layout1.setContentsMargins(10, 10, 20, 5)
+        layout1.setSpacing(10)
+        self.widget.layout().addWidget(self.GroupBox1, 0, 0)
+        self.GroupBox1.setStyleSheet("QGroupBox {background-image: url(background/texture.jpg);border: 5px solid white; border-radius: 5px;}")
+
+
+
+
+        # image box1
+        self.imageView = QLabel(self.widget)
+        self.pixmap = QPixmap("background/user_icon.png")
+        self.imageView.setPixmap(self.pixmap)
+        layout1.addWidget(self.imageView, 0, 1,1,1)
+
+
+
 
         button_pat_login = QPushButton('Patients')
         button_pat_login.clicked.connect(self.button_login_clicked2)
-        self.widget.layout().addWidget(button_pat_login, 1, 1)
+        layout1.addWidget(button_pat_login, 1, 0,1,3)
 
         button_login = QPushButton('Medical Personnel')
         button_login.clicked.connect(self.button_login_clicked)
         #button_login.clicked.connect(self.login_button)
         #button_login.clicked.connect(self.success)
-        self.widget.layout().addWidget(button_login,2,1)
+        layout1.addWidget(button_login,2,0,1,3)
 
         self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
         print("Home Screen")
