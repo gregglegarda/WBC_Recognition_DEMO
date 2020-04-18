@@ -9,6 +9,7 @@ from PyQt5 import QtCore
 import numpy as np
 from datetime import datetime
 from uuid import uuid4
+from uuid import uuid1
 
 def runit(app):
     dialog = data_entry(app)
@@ -122,7 +123,8 @@ class data_entry(QDialog):
     def getinfo(self):
 
         #uniqueid = datetime.now().strftime('%Y%m-%d%H-%M%S-') + str(uuid4())
-        uniqueid = str(uuid4())
+        #uniqueid = str(uuid4())
+        uniqueid = str(uuid1().int >> 64)
         accession = uniqueid
         delta = np.timedelta64(4, 'h')  # EST(eastern) is 5 of UCT(universal) during the winter time and 4 during the summer
         todays_datetime = np.datetime64('now') - delta  # timestamp right now

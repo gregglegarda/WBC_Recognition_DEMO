@@ -28,6 +28,9 @@ class pat_login(QDialog):
         self.app = app
         super(pat_login, self).__init__()
         #=============== LOGIN INFO================
+        filename2 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_outofrange.csv")
+        self.fileName2 = filename2
+
         filename4 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_normal.csv")
         self.fileName4 = filename4
 
@@ -87,9 +90,9 @@ class pat_login(QDialog):
         self.line_edit_dob.setDisplayFormat("MM/dd/yyyy")
         #self.line_edit_dob = LineEditDOB(self.formGroupBox)
 
-        from scripts.line_edit import LineEditSSN
+        from scripts.line_edit import LineEdit4SSN
         self.line_edit_ssn = QLineEdit()
-        self.line_edit_ssn = LineEditSSN(self.formGroupBox)
+        self.line_edit_ssn = LineEdit4SSN(self.formGroupBox)
 
 
 
@@ -127,10 +130,12 @@ class pat_login(QDialog):
         msg = QMessageBox()
         self.input_result = self.loadCsv4(self.fileName4)
         self.input_result2 = self.loadCsv5(self.fileName5)
+        self.input_result3 = self.loadCsv2(self.fileName2)
 
         print("Normal Database", self.input_result)
         print("Abormal Database", self.input_result2)
-        if  self.input_result == True or self.input_result2 == True:
+        print("Out of range Database", self.input_result3)
+        if  self.input_result == True or self.input_result2 == True or self.input_result3 == True:
             user_type = "Patient"
             result = True
             self.success = True
@@ -151,7 +156,7 @@ class pat_login(QDialog):
 
 
     def successlogin(self):
-        if (self.input_result == True or self.input_result2 == True) and (self.success==True):
+        if (self.input_result == True or self.input_result2 == True or self.input_result3 == True) and (self.success==True):
             user_type = "Patient"
             result = True
             self.app.quit()
@@ -167,7 +172,9 @@ class pat_login(QDialog):
         try:
             with open(fileName, "r") as fileInput:
                 for row in csv.reader(fileInput):
-                    if self.line_edit_firstname.text() == row[2] and self.line_edit_lastname.text() == row[3] and self.line_edit_dob.text() == row[4] and self.line_edit_ssn.text() == row[5]:
+                    ssn_last4 = row[5][7] + row[5][8] + row[5][9] + row[5][10]
+                    print(ssn_last4)
+                    if self.line_edit_firstname.text() == row[2] and self.line_edit_lastname.text() == row[3] and self.line_edit_dob.text() == row[4] and self.line_edit_ssn.text() == ssn_last4:
                         print(self.line_edit_firstname.text(),"=", row[2] ,"and", self.line_edit_lastname.text() ,"=", row[3] ,"and", self.line_edit_dob.text() ,"=", row[4] ,"and", self.line_edit_ssn.text() ,"=", row[5])
                         return True
         except:
@@ -177,10 +184,23 @@ class pat_login(QDialog):
         try:
             with open(fileName, "r") as fileInput:
                 for row in csv.reader(fileInput):
-                    if self.line_edit_firstname.text() == row[2] and self.line_edit_lastname.text() == row[3] and self.line_edit_dob.text() == row[4] and self.line_edit_ssn.text() == row[5]:
+                    ssn_last4 = row[5][7] + row[5][8] + row[5][9] + row[5][10]
+                    print(ssn_last4)
+                    if self.line_edit_firstname.text() == row[2] and self.line_edit_lastname.text() == row[3] and self.line_edit_dob.text() == row[4] and self.line_edit_ssn.text() == ssn_last4:
                         return True
         except:
             print("No Normal Database")
+
+    def loadCsv2(self, fileName):
+        try:
+            with open(fileName, "r") as fileInput:
+                for row in csv.reader(fileInput):
+                    ssn_last4 = row[5][7] + row[5][8] + row[5][9] + row[5][10]
+                    print(ssn_last4)
+                    if self.line_edit_firstname.text() == row[2] and self.line_edit_lastname.text() == row[3] and self.line_edit_dob.text() == row[4] and self.line_edit_ssn.text() == ssn_last4:
+                        return True
+        except:
+            print("No Out of range Database")
 
 
 

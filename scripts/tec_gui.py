@@ -517,10 +517,13 @@ class technician_gui(QMainWindow):
             specimen_fig.savefig(os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/images/"+str(accession)))
             #================# END OF SAVE THE RECORD (RESULTS AND IMAGES) ON A DATABASE   #================#
             saved = "yes"
+            msg_box = QMessageBox()
+            msg_box.setText('Auto Differential Complete')
+            msg_box.exec_()
 
 
 
-
+############### ========================= UNUSED EXTRA WINDOW ========================= ##################
         if saved == "yesno":
             #================#   RUN THE APPLICATION FOR VIEWING   #================#
             ## Call class for another WBC_GUI file (Will view everything)

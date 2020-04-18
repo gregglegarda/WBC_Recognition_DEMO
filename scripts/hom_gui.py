@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-import csv
-import numpy as np
-import os
+
 import sys
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import (QFormLayout, QGroupBox, QApplication, QWidget, QPushButton, QLabel, QLineEdit, QGridLayout, QMessageBox,QInputDialog, QComboBox, QMainWindow)
-from PyQt5.QtGui import QPalette,QColor, QIcon, QPixmap
+from PyQt5.QtWidgets import (QGroupBox, QPushButton, QLabel,  QGridLayout, QMainWindow)
+from PyQt5.QtGui import QPixmap
 
 
 def runit(app):

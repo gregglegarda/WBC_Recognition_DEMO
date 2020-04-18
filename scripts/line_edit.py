@@ -22,3 +22,10 @@ class LineEditSSN(QLineEdit):
         self.setPlaceholderText('XXX-XX-XXXX')
     def focusInEvent(self, event):
         self.setInputMask('999-99-9999')
+
+class LineEdit4SSN(QLineEdit):
+    def __init__(self, parent=None):
+        QLineEdit.__init__(self, parent=parent)
+        self.setPlaceholderText('Last 4')
+    def focusInEvent(self, event):
+        self.setInputMask('9999')

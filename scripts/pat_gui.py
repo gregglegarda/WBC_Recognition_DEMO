@@ -48,6 +48,9 @@ class patient_gui(QMainWindow):
         # THEME COLOR
         self.setStyleSheet("QMainWindow {background-image: url(background/background.jpg)}")
         print("Patient GUI Screen")
+
+
+
         #=================== GROUPS ====================#
         # Small group1
         self.GroupBox1 = QGroupBox()
@@ -56,6 +59,33 @@ class patient_gui(QMainWindow):
         layout1.setSpacing(5)
         self.widget.layout().addWidget(self.GroupBox1, 0, 0, 1, 3)
 
+        # Small group2
+        self.GroupBox2 = QGroupBox()
+        layout2 = QGridLayout()
+        self.GroupBox2.setLayout(layout2)
+        layout2.setSpacing(5)
+        self.widget.layout().addWidget(self.GroupBox2, 1, 0, 1, 3)
+
+        # Small group3 (in group box 2)
+        self.GroupBox3 = QGroupBox()
+        layout3 = QGridLayout()
+        self.GroupBox3.setLayout(layout3)
+        layout3.setContentsMargins(60, 10, 10, 10)
+        layout3.setSpacing(5)
+        layout2.addWidget(self.GroupBox3, 2, 0, 1, 2)
+        self.GroupBox3.setStyleSheet("QGroupBox {background-image: url(background/image.png)}")
+
+        # Small group4 (in group box 2)
+        self.GroupBox4 = QGroupBox()
+        layout4 = QGridLayout()
+        self.GroupBox4.setLayout(layout4)
+        layout4.setContentsMargins(60, 10, 10, 10)
+        layout4.setSpacing(5)
+        layout2.addWidget(self.GroupBox4, 2, 2, 1, 1)
+        self.GroupBox4.setStyleSheet("QGroupBox {background-image: url(background/image.png)}")
+
+
+
 
         #==================# LOGOUT BUTTON #==================#
         button_logout = QPushButton('Logout')
@@ -63,29 +93,28 @@ class patient_gui(QMainWindow):
         self.widget.layout().addWidget(button_logout, 2, 2)
 
         # ==================# NORMAL AND ABNORMAL BUTTON #==================#
-        # TRUE NORMAL BUTTON
-        pushButtonNormalDiffs = QtWidgets.QPushButton(self.widget)
-        pushButtonNormalDiffs.setText("Normal")
+        # View Differential BUTTON
+        #pushButtonNormalDiffs = QtWidgets.QPushButton(self.widget)
+        #pushButtonNormalDiffs.setText("View Differential Results")
         # pushButtonNormalDiffs.clicked.setText(QColor.blue("Normal Results"))
-        pushButtonNormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked4)
-        layout1.addWidget(pushButtonNormalDiffs, 0, 2, 1, 1)
+        #pushButtonNormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked4)
+        #layout1.addWidget(pushButtonNormalDiffs, 0, 2, 1, 1)
 
-        # TRUE ABNORMAL BUTTON
-        pushButtonAbnormalDiffs = QtWidgets.QPushButton(self.widget)
-        pushButtonAbnormalDiffs.setText("Abnormal")
-        pushButtonAbnormalDiffs.clicked.connect(self.on_pushButtonLoad_clicked5)
-        layout1.addWidget(pushButtonAbnormalDiffs, 0, 3, 1, 1)
+
 
         #==================# TABLE DATABASE #==================#
-        filename4 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_normal.csv")
-        self.items4 = []
-        self.fileName4 = filename4
-        self.on_pushButtonLoad_clicked4
 
+        filename2 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_outofrange.csv")
+        self.fileName2 = filename2
+        filename4 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_normal.csv")
+        self.fileName4 = filename4
         filename5 = os.path.expanduser("~/Desktop/WBC_Recognition_DEMO/records/diff_records_abnormal.csv")
-        self.items5 = []
         self.fileName5 = filename5
-        self.on_pushButtonLoad_clicked5
+        self.items_all = []
+        #self.on_pushButtonLoad_clicked4
+
+
+
 
         #set model settings
         self.model = QtGui.QStandardItemModel(self.widget)
@@ -121,51 +150,102 @@ class patient_gui(QMainWindow):
         #layout1.addRow(self.tableView)
         layout1.addWidget(self.tableView, 1, 0, 1, 4)
 
+        #show table on login
+        self.on_pushButtonLoad_clicked4()
 
 
+        # ==================# EDIT AND VIEW BUTTON  #==================#
+
+        # Qlineedit
+        self.line_edit_viewImage = QLineEdit()
+        self.line_edit_viewImage.setPlaceholderText('Enter Accession ID')
+        self.line_edit_viewImage.mousePressEvent = lambda _: self.line_edit_viewImage.selectAll()
+        layout2.addWidget(self.line_edit_viewImage, 0, 0, 1, 2)
+
+        # view button
+        viewImage_button = QPushButton('View Differential')
+        viewImage_button.clicked.connect(self.button_find_specimen_clicked)
+        # layout2.addRow(self.line_edit_viewImage, viewImage_button)
+        layout2.addWidget(viewImage_button, 0, 2, 1, 1)
+        # ==================# END EDIT AND VIEW BUTTON  #==================#
+
+        # ==================# SPECIMEN INFO BOX #==================#
+        self.specimen_info_label = QLabel()
+        self.specimen_info_label.setAlignment(QtCore.Qt.AlignTop)
+        self.specimen_info_label.setText(
+            '\t'
+            '\n\t'
+            '\n\t'
+            '\n\t'
+            '\n\t'
+            '\n\t')
+        layout3.addWidget(self.specimen_info_label, 0, 0, 1, 2)
+
+        # ==================# END OF SPECIMEN INFO BOX #==================#
+
+        # ==================# WBC RESULTS BOX #==================#
+        self.specimen_results_label = QLabel()
+        self.specimen_results_label.setAlignment(QtCore.Qt.AlignTop)
+        self.specimen_results_label.setText(
+            '\t'
+            '\n\t'
+            '\n\t'
+            '\n\t'
+            '\n\t'
+            '\n\t')
+        layout4.addWidget(self.specimen_results_label, 0, 0, 1, 2)
+        # ==================# END OF WBC RESULTS BOX #==================#
 
 
     ##############################   FUNCTIONS   #########################
 
-    # ==============# FUNCTION (NORMAL)#==============#
+    # ==============# FUNCTION (VIEW DIFFERENTIAL RESULTS)#==============#
     @QtCore.pyqtSlot()
     def on_pushButtonLoad_clicked4(self):
-        self.loadCsv4(self.fileName4)
+        self.loadCsv4(self.fileName2, self.fileName4, self.fileName5)
 
-    def loadCsv4(self, fileName):
+    def loadCsv4(self, fileName2, fileName4, fileName5):
         while (self.model.rowCount() > 0):
             self.model.removeRow(0)
+
         try:
-            with open(fileName, "r") as fileInput:
-                for row in csv.reader(fileInput):
-                    if self.firstname_info == row[2] and self.lastname_info == row[3]:
-                        self.items4 = [
-                            QtGui.QStandardItem(field)
-                            for field in row
+            with open(fileName2, "r") as fileInput2:
+                for row2 in csv.reader(fileInput2):
+                    if self.firstname_info == row2[2] and self.lastname_info == row2[3]:
+                        self.items_all = [
+                            QtGui.QStandardItem(field2)
+                            for field2 in row2
                         ]
-                        self.model.appendRow(self.items4)
+                        self.model.appendRow(self.items_all)
+        except:
+            print("No Out of range Database")
+
+        try:
+            with open(fileName4, "r") as fileInput4:
+                for row4 in csv.reader(fileInput4):
+                    if self.firstname_info == row4[2] and self.lastname_info == row4[3]:
+                        self.items_all = [
+                            QtGui.QStandardItem(field4)
+                            for field4 in row4
+                        ]
+                        self.model.appendRow(self.items_all)
         except:
             print("No Normal Database")
 
-    # ==============# FUNCTION (ABNORMAL)#==============#
-    @QtCore.pyqtSlot()
-    def on_pushButtonLoad_clicked5(self):
-        self.loadCsv5(self.fileName5)
-
-    def loadCsv5(self, fileName):
-        while (self.model.rowCount() > 0):
-            self.model.removeRow(0)
         try:
-            with open(fileName, "r") as fileInput:
-                for row in csv.reader(fileInput):
-                    if self.firstname_info == row[2] and self.lastname_info == row[3]:
-                        self.items5 = [
-                            QtGui.QStandardItem(field)
-                            for field in row
+            with open(fileName5, "r") as fileInput5:
+                for row5 in csv.reader(fileInput5):
+                    if self.firstname_info == row5[2] and self.lastname_info == row5[3]:
+                        self.items_all = [
+                            QtGui.QStandardItem(field5)
+                            for field5 in row5
                         ]
-                        self.model.appendRow(self.items5)
+                        self.model.appendRow(self.items_all)
         except:
             print("No Abnormal Database")
+
+
+
 
 
     # ===============# LOGOUT FUNCTION#===============#
@@ -177,6 +257,111 @@ class patient_gui(QMainWindow):
         self.close()
         #self.app.quit()
 
+    # ===============# FIND IMAGE BUTTON  AND VIEW#===============#
+
+    @QtCore.pyqtSlot()
+    def button_find_specimen_clicked(self):
+        # show the specimen info and results
+        editline = self.line_edit_viewImage.text()
+
+        ############## OUT OF RANGE ##################
+        try:
+            aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk = self.readCsvForSpecInfo(self.fileName2, editline)
+            # show speciment info
+            self.specimen_info_label.setText(
+                'Accession ID\t\t\t{aa}'
+                '\nAccession Date/Time\t\t{bb}'
+                '\nPatient First Name\t\t{cc}'
+                '\nPatient Last Name\t\t{dd}'
+                '\nDate of Birth\t\t\t{ee}'
+                '\nSocial Security Number\t\t{ff}'
+                    .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, ))
+            # show results
+            self.specimen_results_label.setText(
+                'Eosinophil %\t\t{gg}'
+                '\nLymphocyte %\t\t{hh}'
+                '\nMonocyte %\t\t{ii}'
+                '\nNeutrophil %\t\t{jj}'
+                '\n'
+                '\nINITIAL RESULT\t\t\t{kk}'
+                    .format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk))
+        except:
+            print("Edit Line Empty for abnormal")
 
 
+
+
+
+        ################ ABNORMAL ###################
+        try:
+            aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk = self.readCsvForSpecInfo(self.fileName5, editline)
+            # show speciment info
+            self.specimen_info_label.setText(
+                'Accession ID\t\t\t{aa}'
+                '\nAccession Date/Time\t\t{bb}'
+                '\nPatient First Name\t\t{cc}'
+                '\nPatient Last Name\t\t{dd}'
+                '\nDate of Birth\t\t\t{ee}'
+                '\nSocial Security Number\t\t{ff}'
+                    .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, ))
+            # show results
+            self.specimen_results_label.setText(
+                'Eosinophil %\t\t{gg}'
+                '\nLymphocyte %\t\t{hh}'
+                '\nMonocyte %\t\t{ii}'
+                '\nNeutrophil %\t\t{jj}'
+                '\n'
+                '\nINITIAL RESULT\t\t\t{kk}'
+                    .format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk))
+        except:
+            print("Edit Line Empty for abnormal")
+
+        ################ NORMAL ###################
+        try:
+            aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk = self.readCsvForSpecInfo(self.fileName4, editline)
+            # show speciment info
+            self.specimen_info_label.setText(
+                'Accession ID\t\t\t{aa}'
+                '\nAccession Date/Time\t\t{bb}'
+                '\nPatient First Name\t\t{cc}'
+                '\nPatient Last Name\t\t{dd}'
+                '\nDate of Birth\t\t\t{ee}'
+                '\nSocial Security Number\t\t{ff}'
+                    .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, ))
+            # show results
+            self.specimen_results_label.setText(
+                'Eosinophil %\t\t{gg}'
+                '\nLymphocyte %\t\t{hh}'
+                '\nMonocyte %\t\t{ii}'
+                '\nNeutrophil %\t\t{jj}'
+                '\n'
+                '\nINITIAL RESULT\t\t\t{kk}'
+                    .format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk))
+        except:
+            print("Edit Line Empty for normal")
+    def path_leaf(self, path):
+        head, tail = ntpath.split(path)
+        return tail or ntpath.basename(head)
+    def readCsvForSpecInfo(self, fileName, editline):
+        try:
+            with open(fileName, "r") as fileInput:
+                for entry in csv.reader(fileInput):
+                    print(entry[0])
+                    print(editline)
+                    if (entry[0]) == editline:
+                        aa = entry[0] #accID
+                        bb = entry[1] #accDate
+                        cc = entry[2] #FN
+                        dd = entry[3] #LN
+                        ee = entry[4] #DOB
+                        ff = entry[5] #SSN
+                        gg = entry[6] #E
+                        hh = entry[7] #L
+                        ii = entry[8] #M
+                        jj = entry[9] #N
+                        kk = entry[10] #Normality
+
+            return aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk
+        except:
+            print("Reading Specimen Info Failed")
     # ===============# LOAD CSV AND CHECK FOR THE LOGIN INFO#===============#

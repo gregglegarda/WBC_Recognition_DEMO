@@ -1,4 +1,5 @@
 #GENERATE SPECIMEN DIFFERENTIAL CLASS
+import numpy as np
 
 class specimen_differential():
     def __init__ (self):
@@ -15,6 +16,7 @@ class specimen_differential():
         self.totalflag = 0
 
         self.normality = 'NORMAL'
+
     def generate_results(self, predicted_labels):
 
         # normal ranges of wbc
@@ -71,6 +73,10 @@ class specimen_differential():
         print("\n------------","\nWBC COUNT:","\n------------", "\nEosinophils:", self.e ,"\nLymphocytes:", self.l ,"\nMonocytes:", self.m,"\nNeutrophils:", self.n)
         print("\n------------","\nWBC PERCENT %:","\n------------","\nEosinophils:", self.e/self.total*100 ,"%\nLymphocytes:", self.l/self.total*100 ,"%\nMonocytes:", self.m/self.total*100,"%\nNeutrophils:", self.n/self.total*100, "%")
 
-        return [self.e, self.l, self.m, self.n, self.normality], self.normality
+        if self.normality == 'NORMAL':
+            final_result = 'NORMAL'
+            return [self.e, self.l, self.m, self.n, self.normality, final_result], self.normality
+        else:
+            return [self.e, self.l, self.m, self.n, self.normality], self.normality
 
 #END OF SPECIMEN DIFFERENTIAL CLASS

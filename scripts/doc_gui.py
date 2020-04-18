@@ -301,13 +301,26 @@ class doctor_gui(QMainWindow):
     # ==============================# SUBMIT NORMAL OR ABNORMAL REVIEW FUNCTION#==============================#
     @QtCore.pyqtSlot()
     def button_path_review_clicked_normal(self):
-        self.loadEntry(self.fileName2, self.fileName3, self.fileName4)
+        if str(self.comment_text_edit.toPlainText()) == '':
+            msg = 'Empty comments'
+            self.pop_up_msg(msg)
+        else:
+            msg = 'Saved to normal database'
+            self.loadEntry(self.fileName2, self.fileName3, self.fileName4, msg)
+
     @QtCore.pyqtSlot()
     def button_path_review_clicked_abnormal(self):
-        self.loadEntry(self.fileName2, self.fileName3, self.fileName5)
+        if str(self.comment_text_edit.toPlainText()) == '':
+            msg = 'Empty comments'
+            self.pop_up_msg(msg)
+        else:
+            msg = 'Saved to abnormal database'
+            self.loadEntry(self.fileName2, self.fileName3, self.fileName5, msg)
 
-    def loadEntry(self, fileName2, fileName3, fileName45):
+
+    def loadEntry(self, fileName2, fileName3, fileName45, msg):
         # save results to csv files
+        found = False
         try:  # try this first if there is a file. if none, go to except
 
             lines = list()
@@ -329,19 +342,30 @@ class doctor_gui(QMainWindow):
                                 row.append(str(self.comment_text_edit.toPlainText()))
                                 writer3.writerow(row)
                                 writer45.writerow(row)
+                                self.pop_up_msg(msg)
+                                found = True
                             ### if the entry is not the editline, remove from the database since it was moved to the reviewed database
                             else:
                                 lines.append(entry)
+
 
                         with open(fileName2, 'w') as writeFile:
                             writer2 = csv.writer(writeFile)
                             writer2.writerows(lines)
             self.comment_text_edit.clear()
+            if found != True:
+                msg = 'Enter a valid Accession ID from In Progress'
+                self.pop_up_msg(msg)
 
         except IOError:
             print("No entry to review")
 
 
+
+    def pop_up_msg(self, msg):
+        msg_box = QMessageBox()
+        msg_box.setText(msg)
+        msg_box.exec_()
 
 
 
