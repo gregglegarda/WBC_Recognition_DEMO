@@ -301,24 +301,26 @@ class doctor_gui(QMainWindow):
     # ==============================# SUBMIT NORMAL OR ABNORMAL REVIEW FUNCTION#==============================#
     @QtCore.pyqtSlot()
     def button_path_review_clicked_normal(self):
+        final_result = 'NORMAL\n\n'
         if str(self.comment_text_edit.toPlainText()) == '':
             msg = 'Empty comments'
             self.pop_up_msg(msg)
         else:
             msg = 'Saved to normal database'
-            self.loadEntry(self.fileName2, self.fileName3, self.fileName4, msg)
+            self.loadEntry(self.fileName2, self.fileName3, self.fileName4, msg, final_result)
 
     @QtCore.pyqtSlot()
     def button_path_review_clicked_abnormal(self):
+        final_result = 'ABNORMAL\n\n'
         if str(self.comment_text_edit.toPlainText()) == '':
             msg = 'Empty comments'
             self.pop_up_msg(msg)
         else:
             msg = 'Saved to abnormal database'
-            self.loadEntry(self.fileName2, self.fileName3, self.fileName5, msg)
+            self.loadEntry(self.fileName2, self.fileName3, self.fileName5, msg, final_result)
 
 
-    def loadEntry(self, fileName2, fileName3, fileName45, msg):
+    def loadEntry(self, fileName2, fileName3, fileName45, msg, final_result):
         # save results to csv files
         found = False
         try:  # try this first if there is a file. if none, go to except
@@ -339,7 +341,7 @@ class doctor_gui(QMainWindow):
                             # move to the reviewed database
                             if entry[0] == editline:
                                 row = entry
-                                row.append(str(self.comment_text_edit.toPlainText()))
+                                row.append(str(final_result + self.comment_text_edit.toPlainText()))
                                 writer3.writerow(row)
                                 writer45.writerow(row)
                                 self.pop_up_msg(msg)

@@ -39,6 +39,7 @@ class pat_login(QDialog):
 
         self.input_result = 0
         self.input_result2 = 0
+        self.input_result3 = 0
         self.firstname_info = 0
         self.lastname_info = 0
         self.dob_info = 0
@@ -131,6 +132,7 @@ class pat_login(QDialog):
         self.input_result = self.loadCsv4(self.fileName4)
         self.input_result2 = self.loadCsv5(self.fileName5)
         self.input_result3 = self.loadCsv2(self.fileName2)
+
 
         print("Normal Database", self.input_result)
         print("Abormal Database", self.input_result2)
