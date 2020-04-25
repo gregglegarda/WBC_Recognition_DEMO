@@ -270,7 +270,7 @@ class patient_gui(QMainWindow):
         # show the specimen info and results
         editline = self.line_edit_viewImage.text()
         pat_text_format =  ('<p>'
-                '<b><h3>PATIENT INFORMATION</h3></b>'
+                '<br/><b><h3>PATIENT INFORMATION</h3></b>'
                 'Patient First Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{cc}'
                 '<br/>Patient Last Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{dd}'
                 '<br/>Date of Birth &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ee}'
@@ -288,14 +288,15 @@ class patient_gui(QMainWindow):
                 '<br/>Neutrophil %  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{jj}'
                 '<br/>'
                 '<br/><b><h3>DOCTORS COMMENTS</h3></b>'
-                '{ll}'
-                '<p>')
+                '<html><body><pre style=font-family:Arial>{ll}</pre></body></html>'
+                '</p>')
 
         ############## OUT OF RANGE ##################
         try:
             aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll = self.readCsvForSpecInfo(self.fileName2, editline)
             # show speciment info
-            self.specimen_info_label.setText(pat_text_format
+            self.specimen_info_label.setText(
+                    pat_text_format
 
                     .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, gg=gg, hh=hh, ii=ii, jj=jj, kk=kk, ll=ll))
             # show results
