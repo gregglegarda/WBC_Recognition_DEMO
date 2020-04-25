@@ -37,12 +37,12 @@ class patient_gui(QMainWindow):
         self.setCentralWidget(self.widget)
         self.widget.setLayout(QtWidgets.QGridLayout())
         self.widget.layout().setContentsMargins(10, 10, 10, 10)
-        self.widget.layout().setSpacing(0)
+        self.widget.layout().setSpacing(10)
         self.setWindowTitle("Patient Results")
         #self.widget.layout().setColumnMinimumWidth(0, 50)
         #self.widget.layout().setColumnMinimumWidth(3, 50)
         #self.widget.layout().setRowMinimumHeight(0, 50)
-        #self.widget.layout().setRowMinimumHeight(6, 50)
+        self.widget.layout().setRowMinimumHeight(1, 500)
         self.showMaximized()
 
         # THEME COLOR
@@ -57,14 +57,14 @@ class patient_gui(QMainWindow):
         layout1 = QGridLayout()
         self.GroupBox1.setLayout(layout1)
         layout1.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox1, 0, 0, 1, 3)
+        self.widget.layout().addWidget(self.GroupBox1, 0, 0, 3, 2)
 
         # Small group2
         self.GroupBox2 = QGroupBox()
         layout2 = QGridLayout()
         self.GroupBox2.setLayout(layout2)
         layout2.setSpacing(5)
-        self.widget.layout().addWidget(self.GroupBox2, 1, 0, 1, 3)
+        self.widget.layout().addWidget(self.GroupBox2, 0, 2, 3, 2)
 
         # Small group3 (in group box 2)
         self.GroupBox3 = QGroupBox()
@@ -72,17 +72,17 @@ class patient_gui(QMainWindow):
         self.GroupBox3.setLayout(layout3)
         layout3.setContentsMargins(60, 10, 10, 10)
         layout3.setSpacing(5)
-        layout2.addWidget(self.GroupBox3, 2, 0, 1, 2)
+        layout2.addWidget(self.GroupBox3, 2, 0, 1, 3)
         self.GroupBox3.setStyleSheet("QGroupBox {background-image: url(background/image.png)}")
 
         # Small group4 (in group box 2)
-        self.GroupBox4 = QGroupBox()
-        layout4 = QGridLayout()
-        self.GroupBox4.setLayout(layout4)
-        layout4.setContentsMargins(60, 10, 10, 10)
-        layout4.setSpacing(5)
-        layout2.addWidget(self.GroupBox4, 2, 2, 1, 1)
-        self.GroupBox4.setStyleSheet("QGroupBox {background-image: url(background/image.png)}")
+        #self.GroupBox4 = QGroupBox()
+        #layout4 = QGridLayout()
+        #self.GroupBox4.setLayout(layout4)
+        #layout4.setContentsMargins(60, 10, 10, 10)
+        #layout4.setSpacing(5)
+        #layout2.addWidget(self.GroupBox4, 2, 2, 1, 1)
+        #self.GroupBox4.setStyleSheet("QGroupBox {background-image: url(background/image.png)}")
 
 
 
@@ -90,7 +90,7 @@ class patient_gui(QMainWindow):
         #==================# LOGOUT BUTTON #==================#
         button_logout = QPushButton('Logout')
         button_logout.clicked.connect(self.logout_success)
-        self.widget.layout().addWidget(button_logout, 2, 2)
+        self.widget.layout().addWidget(button_logout, 3, 3, 1,1)
 
         # ==================# NORMAL AND ABNORMAL BUTTON #==================#
         # View Differential BUTTON
@@ -127,8 +127,8 @@ class patient_gui(QMainWindow):
         self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         #set widths
-        self.tableView.setColumnWidth(0, 325)#id
-        self.tableView.setColumnWidth(1, 200)#date
+        self.tableView.setColumnWidth(0, 200)#id
+        self.tableView.setColumnWidth(1, 150)#date
         self.tableView.setColumnWidth(2, 120)#first
         self.tableView.setColumnWidth(3, 120)#last
         self.tableView.setColumnWidth(4, 120)# DOB
@@ -140,6 +140,10 @@ class patient_gui(QMainWindow):
         self.tableView.setColumnWidth(10, 150) # Initial result
 
         #hide some columns
+        self.tableView.setColumnHidden(2, True)
+        self.tableView.setColumnHidden(3, True)
+        self.tableView.setColumnHidden(4, True)
+        self.tableView.setColumnHidden(5, True)
         self.tableView.setColumnHidden(6, True)
         self.tableView.setColumnHidden(7, True)
         self.tableView.setColumnHidden(8, True)
@@ -184,16 +188,16 @@ class patient_gui(QMainWindow):
         # ==================# END OF SPECIMEN INFO BOX #==================#
 
         # ==================# WBC RESULTS BOX #==================#
-        self.specimen_results_label = QLabel()
-        self.specimen_results_label.setAlignment(QtCore.Qt.AlignTop)
-        self.specimen_results_label.setText(
-            '\t'
-            '\n\t'
-            '\n\t'
-            '\n\t'
-            '\n\t'
-            '\n\t')
-        layout4.addWidget(self.specimen_results_label, 0, 0, 1, 2)
+        #self.specimen_results_label = QLabel()
+        #self.specimen_results_label.setAlignment(QtCore.Qt.AlignTop)
+        #self.specimen_results_label.setText(
+            #'\t'
+            #'\n\t'
+            #'\n\t'
+            #'\n\t'
+            #'\n\t'
+            #'\n\t')
+        #layout4.addWidget(self.specimen_results_label, 0, 0, 1, 2)
         # ==================# END OF WBC RESULTS BOX #==================#
 
 
@@ -212,11 +216,13 @@ class patient_gui(QMainWindow):
             with open(fileName2, "r") as fileInput2:
                 for row2 in csv.reader(fileInput2):
                     if self.firstname_info == row2[2] and self.lastname_info == row2[3]:
+                        row2.append('PENDING')
                         self.items_all = [
                             QtGui.QStandardItem(field2)
                             for field2 in row2
                         ]
                         self.model.appendRow(self.items_all)
+
         except:
             print("No Out of range Database")
 
@@ -263,28 +269,45 @@ class patient_gui(QMainWindow):
     def button_find_specimen_clicked(self):
         # show the specimen info and results
         editline = self.line_edit_viewImage.text()
+        pat_text_format =  ('<p>'
+                '<b><h3>PATIENT INFORMATION</h3></b>'
+                'Patient First Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{cc}'
+                '<br/>Patient Last Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{dd}'
+                '<br/>Date of Birth &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ee}'
+                '<br/>Social Security Number &nbsp; &nbsp; &nbsp; &nbsp;{ff}'
+                '<br/>'
+                '<br/><b><h3>SPECIMEN INFORMATION</h3></b>'
+                'Accession ID &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{aa}'
+                '<br/>Accession Date/Time &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{bb}'
+                '<br/>'
+                '<br/><h3><b>SPECIMEN RESULT</b></h3>'
+                'INITIAL RESULT &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{kk}'
+                '<br/>Eosinophil % &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{gg}'
+                '<br/>Lymphocyte %  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;{hh}'
+                '<br/>Monocyte %  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ii}'
+                '<br/>Neutrophil %  &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{jj}'
+                '<br/>'
+                '<br/><b><h3>DOCTORS COMMENTS</h3></b>'
+                '{ll}'
+                '<p>')
 
         ############## OUT OF RANGE ##################
         try:
-            aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk = self.readCsvForSpecInfo(self.fileName2, editline)
+            aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll = self.readCsvForSpecInfo(self.fileName2, editline)
             # show speciment info
-            self.specimen_info_label.setText(
-                'Accession ID\t\t\t{aa}'
-                '\nAccession Date/Time\t\t{bb}'
-                '\nPatient First Name\t\t{cc}'
-                '\nPatient Last Name\t\t{dd}'
-                '\nDate of Birth\t\t\t{ee}'
-                '\nSocial Security Number\t\t{ff}'
-                    .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, ))
+            self.specimen_info_label.setText(pat_text_format
+
+                    .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, gg=gg, hh=hh, ii=ii, jj=jj, kk=kk, ll=ll))
             # show results
-            self.specimen_results_label.setText(
-                'Eosinophil %\t\t{gg}'
-                '\nLymphocyte %\t\t{hh}'
-                '\nMonocyte %\t\t{ii}'
-                '\nNeutrophil %\t\t{jj}'
-                '\n'
-                '\nINITIAL RESULT\t\t\t{kk}'
-                    .format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk))
+            #self.specimen_results_label.setText(
+                #'Eosinophil %\t\t{gg}'
+                #'\nLymphocyte %\t\t{hh}'
+                #'\nMonocyte %\t\t{ii}'
+                #'\nNeutrophil %\t\t{jj}'
+                #'\n'
+                #'\nINITIAL RESULT\t\t\t{kk}'
+                #'\nDOCTORS COMMENTS\t\t\t{ll}'
+                    #.format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk, ll=ll))
         except:
             print("Edit Line Empty for abnormal")
 
@@ -294,49 +317,40 @@ class patient_gui(QMainWindow):
 
         ################ ABNORMAL ###################
         try:
-            aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk = self.readCsvForSpecInfo(self.fileName5, editline)
+            aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll = self.readCsvForSpecInfo(self.fileName5, editline)
             # show speciment info
-            self.specimen_info_label.setText(
-                'Accession ID\t\t\t{aa}'
-                '\nAccession Date/Time\t\t{bb}'
-                '\nPatient First Name\t\t{cc}'
-                '\nPatient Last Name\t\t{dd}'
-                '\nDate of Birth\t\t\t{ee}'
-                '\nSocial Security Number\t\t{ff}'
-                    .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, ))
+            self.specimen_info_label.setText(pat_text_format
+                    .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, gg=gg, hh=hh, ii=ii, jj=jj, kk=kk, ll=ll))
             # show results
-            self.specimen_results_label.setText(
-                'Eosinophil %\t\t{gg}'
-                '\nLymphocyte %\t\t{hh}'
-                '\nMonocyte %\t\t{ii}'
-                '\nNeutrophil %\t\t{jj}'
-                '\n'
-                '\nINITIAL RESULT\t\t\t{kk}'
-                    .format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk))
+            #self.specimen_results_label.setText(
+                #'Eosinophil %\t\t{gg}'
+                #'\nLymphocyte %\t\t{hh}'
+                #'\nMonocyte %\t\t{ii}'
+                #'\nNeutrophil %\t\t{jj}'
+                #'\n'
+                #'\nINITIAL RESULT\t\t\t{kk}'
+                #'\nDOCTORS COMMENTS\t\t\t{ll}'
+                    #.format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk, ll=ll))
         except:
             print("Edit Line Empty for abnormal")
 
         ################ NORMAL ###################
         try:
-            aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk = self.readCsvForSpecInfo(self.fileName4, editline)
+            aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll = self.readCsvForSpecInfo(self.fileName4, editline)
             # show speciment info
-            self.specimen_info_label.setText(
-                'Accession ID\t\t\t{aa}'
-                '\nAccession Date/Time\t\t{bb}'
-                '\nPatient First Name\t\t{cc}'
-                '\nPatient Last Name\t\t{dd}'
-                '\nDate of Birth\t\t\t{ee}'
-                '\nSocial Security Number\t\t{ff}'
-                    .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, ))
+            self.specimen_info_label.setText(pat_text_format
+                    .format(aa=aa, bb=bb, cc=cc, dd=dd, ee=ee, ff=ff, gg=gg, hh=hh, ii=ii, jj=jj, kk=kk, ll=ll))
             # show results
-            self.specimen_results_label.setText(
-                'Eosinophil %\t\t{gg}'
-                '\nLymphocyte %\t\t{hh}'
-                '\nMonocyte %\t\t{ii}'
-                '\nNeutrophil %\t\t{jj}'
-                '\n'
-                '\nINITIAL RESULT\t\t\t{kk}'
-                    .format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk))
+            #self.specimen_results_label.setText(
+                #'Eosinophil %\t\t{gg}'
+                #'\nLymphocyte %\t\t{hh}'
+                #'\nMonocyte %\t\t{ii}'
+                #'\nNeutrophil %\t\t{jj}'
+                #'\n'
+                #'\nINITIAL RESULT\t\t\t{kk}'
+                #'\nDOCTORS COMMENTS\t\t\t{ll}'
+
+                    #.format(gg=gg, hh=hh, ii=ii, jj=jj, kk=kk, ll=ll))
         except:
             print("Edit Line Empty for normal")
     def path_leaf(self, path):
@@ -360,8 +374,12 @@ class patient_gui(QMainWindow):
                         ii = entry[8] #M
                         jj = entry[9] #N
                         kk = entry[10] #Normality
+                        try:
+                            ll = entry[11] #Comments
+                        except:
+                            ll = 'PENDING'
 
-            return aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk
+            return aa, bb, cc, dd, ee, ff, gg, hh, ii, jj, kk, ll
         except:
             print("Reading Specimen Info Failed")
     # ===============# LOAD CSV AND CHECK FOR THE LOGIN INFO#===============#
